@@ -105,12 +105,19 @@ public class Pathfinding : MonoBehaviour
             /****/
             //TODO
             /****/
-            // Calculamos los costes g y h del nodo
-            //GetDistance(node, CurrentTargetNode);
-            //node.hCost = Heuristic(node, CurrentTargetNode);
-            //node.gCost = 
 
-            // node.mParent
+            for (int i = 0; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < node.fCost)
+                {
+                    //openSet.Insert(i, neighbour);
+                    // Elegimos aqui el siguiente
+                    
+                    node = openSet[i];
+                    // Debug.Log("Gcost " + node.gCost + ", Hcost" + node.hCost + ", Fcost " + node.fCost);
+                }
+            }
+            // Debug.Log("Gcost " + node.gCost + ", Hcost" + node.hCost + ", Fcost " + node.fCost);
 
             // Manage open/closed list
             openSet.Remove(node);
@@ -145,20 +152,7 @@ public class Pathfinding : MonoBehaviour
                         // Insertar ordenado en vez de con ADD
                         if (!openSet.Contains(neighbour))
                         {
-                            if (openSet.Count == 0)
-                            {
-                                openSet.Add(neighbour);
-                            }
-                            else
-                            {
-                                for (int i = 0; i < openSet.Count; i++)
-                                {
-                                    if (openSet[i].hCost >= node.hCost)
-                                    {
-                                        openSet.Insert(i, neighbour);
-                                    }
-                                }
-                            }
+                            openSet.Add(neighbour);
                         }
                     }
                 }
@@ -239,8 +233,8 @@ public class Pathfinding : MonoBehaviour
         /****/
         //TODO
         /****/
-        GetDistance(nodeA, nodeB);
-        return 0;
+        
+        return GetDistance(nodeA, nodeB);
     }
 
     /***************************************************************************/
