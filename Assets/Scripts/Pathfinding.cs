@@ -108,16 +108,13 @@ public class Pathfinding : MonoBehaviour
 
             for (int i = 0; i < openSet.Count; i++)
             {
-                if (openSet[i].fCost < node.fCost)
+                if (openSet[i].fCost < node.fCost || 
+                    (openSet[i].fCost == node.fCost && openSet[i].gCost < node.gCost))
                 {
-                    //openSet.Insert(i, neighbour);
                     // Elegimos aqui el siguiente
-                    
                     node = openSet[i];
-                    // Debug.Log("Gcost " + node.gCost + ", Hcost" + node.hCost + ", Fcost " + node.fCost);
                 }
             }
-            // Debug.Log("Gcost " + node.gCost + ", Hcost" + node.hCost + ", Fcost " + node.fCost);
 
             // Manage open/closed list
             openSet.Remove(node);
@@ -144,12 +141,12 @@ public class Pathfinding : MonoBehaviour
 
                     // If the neighbor isn't already in the openset
                     // or the path to it is shorter than the current
-                    if (!openSet.Contains(neighbour) || node.gCost + neighbour.mCostMultiplier < neighbour.gCost)
+                    if (!openSet.Contains(neighbour) || node.gCost + GetDistance(node, neighbour) * neighbour.mCostMultiplier < neighbour.gCost)
                     {
                         neighbour.hCost = Heuristic(neighbour, CurrentTargetNode);
-                        neighbour.gCost = node.gCost + neighbour.mCostMultiplier;
+                        neighbour.gCost = node.gCost + GetDistance(node, neighbour) * neighbour.mCostMultiplier;
                         neighbour.mParent = node;
-                        // Insertar ordenado en vez de con ADD
+                        // Insert to evaluate it
                         if (!openSet.Contains(neighbour))
                         {
                             openSet.Add(neighbour);
