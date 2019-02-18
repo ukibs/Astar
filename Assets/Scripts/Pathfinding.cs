@@ -191,6 +191,7 @@ public class Pathfinding : MonoBehaviour
             path.Insert(0, currentNode);
             currentNode = currentNode.mParent;
         }
+        Debug.Log("Smoothing path");
         SmoothPath(path);
         Grid.path = path;
     }
@@ -252,7 +253,7 @@ public class Pathfinding : MonoBehaviour
 
         for (int i = 1; i < path.Count; i++)
         {
-            if(BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[i].mGridX, path[i].mGridY))
+            if(!BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[i].mGridX, path[i].mGridY))
             {
                 smoothPath.Add(path[i]);
                 currentNode = smoothPath[smoothPath.Count - 1];
@@ -269,18 +270,36 @@ public class Pathfinding : MonoBehaviour
         //TODO: 4 Connectivity
         //TODO: Cost
 
+        // Primero distancia manhatan entre xy y x2y2
         int w = x2 - x;
         int h = y2 - y;
+
         int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
-        if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
-        if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
-        if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+        // 
+        if (w < 0)
+            dx1 = -1;
+        else if (w > 0)
+            dx1 = 1;
+        // 
+        if (h < 0)
+            dy1 = -1;
+        else if (h > 0)
+            dy1 = 1;
+        //
+        if (w < 0)
+            dx2 = -1;
+        else if (w > 0)
+            dx2 = 1;
+        // Ponemos el ancho en longest
+        // y el alto en shortest
         int longest = Mathf.Abs(w);
         int shortest = Mathf.Abs(h);
+        // Y si no es mas largo, que lo sea
         if (!(longest > shortest))
         {
             longest = Mathf.Abs(h);
             shortest = Mathf.Abs(w);
+            // Y aquí asigna el dy2
             if (h < 0)
             {
                 dy2 = -1;
@@ -291,7 +310,11 @@ public class Pathfinding : MonoBehaviour
             }
             dx2 = 0;
         }
+        // Parece que da longest o 1 si es más corto
         int numerator = longest >> 1;
+        // Ahora recorremos el camino entre los dos nodos 
+        // Siguiendo una línea recta o diagonal
+        // Según los dx1, dy1 y dx2, dy2 que hayamos sacado
         for (int i = 0; i <= longest; i++)
         {
             if (!Grid.GetNode(x, y).mWalkable)
