@@ -84,7 +84,7 @@ public class Pathfinding : MonoBehaviour
     /***************************************************************************/
 
     // List<Node> to worck with the smoothing stuff
-    public void FindPath(Vector3 startPos, Vector3 targetPos, int iterations)
+    public List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int iterations)
     {
         CurrentStartNode = Grid.NodeFromWorldPoint(startPos);
         CurrentTargetNode = Grid.NodeFromWorldPoint(targetPos);
@@ -173,6 +173,8 @@ public class Pathfinding : MonoBehaviour
                 //return closedSet;
             }
         }
+
+        return Grid.path;
     }
 
     /***************************************************************************/
@@ -314,12 +316,13 @@ public class Pathfinding : MonoBehaviour
         }
         // Parece que da longest o 1 si es más corto
         int numerator = longest >> 1;
+        Node cNode = Grid.GetNode(x, y);
         // Ahora recorremos el camino entre los dos nodos 
         // Siguiendo una línea recta o diagonal
         // Según los dx1, dy1 y dx2, dy2 que hayamos sacado
         for (int i = 0; i <= longest; i++)
         {
-            if (!Grid.GetNode(x, y).mWalkable)
+            if (!cNode.mWalkable)
             {
                 return false;
             }

@@ -31,7 +31,7 @@ public class Unit : MonoBehaviour
       // Hit?
       if (Physics.Raycast( ray, out hit, 1000.0f ) ){
         // Find path
-        //mPath = Astar.GetComponent<Pathfinding>().FindPath( transform.position, hit.point, -1 );
+        mPath = Astar.GetComponent<Pathfinding>().FindPath( transform.position, hit.point, -1 );
 
         // If a path was found follow it
         if( mPath != null){
