@@ -192,8 +192,8 @@ public class Pathfinding : MonoBehaviour
             currentNode = currentNode.mParent;
         }
         Debug.Log("Smoothing path");
-        SmoothPath(path);
-        Grid.path = path;
+        
+        Grid.path = SmoothPath(path);
     }
 
     /***************************************************************************/
@@ -242,7 +242,7 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    void SmoothPath(List<Node> path)
+    List<Node> SmoothPath(List<Node> path)
     {
         //TODO
         List<Node> smoothPath = new List<Node>();
@@ -255,12 +255,14 @@ public class Pathfinding : MonoBehaviour
         {
             if(!BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[i].mGridX, path[i].mGridY))
             {
-                smoothPath.Add(path[i]);
+                smoothPath.Add(path[i-1]);
                 currentNode = smoothPath[smoothPath.Count - 1];
             }
         }
 
-        path = smoothPath;
+        smoothPath.Add(path[path.Count - 1]);
+
+        return smoothPath;
     }
 
     /***************************************************************************/
