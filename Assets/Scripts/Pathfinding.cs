@@ -141,10 +141,11 @@ public class Pathfinding : MonoBehaviour
 
                     // If the neighbor isn't already in the openset
                     // or the path to it is shorter than the current
-                    if (!openSet.Contains(neighbour) || node.gCost + GetDistance(node, neighbour) * neighbour.mCostMultiplier < neighbour.gCost)
+                    float newGCost = node.gCost + GetDistance(node, neighbour) * neighbour.mCostMultiplier;
+                    if (!openSet.Contains(neighbour) || newGCost < neighbour.gCost)
                     {
                         neighbour.hCost = Heuristic(neighbour, CurrentTargetNode);
-                        neighbour.gCost = node.gCost + GetDistance(node, neighbour) * neighbour.mCostMultiplier;
+                        neighbour.gCost = newGCost;
                         neighbour.mParent = node;
                         // Insert to evaluate it
                         if (!openSet.Contains(neighbour))
