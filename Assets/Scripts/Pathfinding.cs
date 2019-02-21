@@ -194,7 +194,8 @@ public class Pathfinding : MonoBehaviour
             currentNode = currentNode.mParent;
         }
         Debug.Log("Smoothing path");
-        
+        path.Insert(0, startNode);
+
         Grid.path = SmoothPath(path);
     }
 
@@ -249,20 +250,26 @@ public class Pathfinding : MonoBehaviour
         //TODO
         List<Node> smoothPath = new List<Node>();
 
-        smoothPath.Add(path[0]);
+        smoothPath.Add(path[path.Count-1]);
 
         Node currentNode = smoothPath[0];
 
-        for (int i = 1; i < path.Count; i++)
+        int iterations = 0;
+        while(currentNode != path[0] && iterations < 20)
         {
-            if(!BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[i].mGridX, path[i].mGridY))
+            for (int j = 0; j < path.Count; j++)
             {
-                smoothPath.Add(path[i-1]);
-                currentNode = smoothPath[smoothPath.Count - 1];
+                if (BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[j].mGridX, path[j].mGridY))
+                {
+                    smoothPath.Insert(0, path[j]);
+                    currentNode = path[j];
+                    break;
+                }
             }
+            iterations++;
+            Debug.Log(iterations);
         }
-
-        smoothPath.Add(path[path.Count - 1]);
+        smoothPath.Insert(0, path[0]);
 
         return smoothPath;
     }
@@ -273,7 +280,8 @@ public class Pathfinding : MonoBehaviour
     {
         //TODO: 4 Connectivity
         //TODO: Cost
-
+        Node destNode = Grid.GetNode(x2, y2);
+        Node startNode = Grid.GetNode(x, y);
         // Primero distancia manhatan entre xy y x2y2
         int w = x2 - x;
         int h = y2 - y;
@@ -316,12 +324,14 @@ public class Pathfinding : MonoBehaviour
         }
         // Parece que da longest o 1 si es más corto
         int numerator = longest >> 1;
-        Node cNode = Grid.GetNode(x, y);
+        Node cNode;
+        float distance = 0.0f;
         // Ahora recorremos el camino entre los dos nodos 
         // Siguiendo una línea recta o diagonal
         // Según los dx1, dy1 y dx2, dy2 que hayamos sacado
         for (int i = 0; i <= longest; i++)
         {
+            cNode = Grid.GetNode(x, y);
             if (!cNode.mWalkable)
             {
                 return false;
@@ -339,9 +349,16 @@ public class Pathfinding : MonoBehaviour
                 x += dx2;
                 y += dy2;
             }
-        }
 
-        return true;
+            distance += cNode.mCostMultiplier;
+        }
+        
+        float gCostDif = startNode.gCost - destNode.gCost;
+        if (gCostDif > distance)
+        {
+            return true;
+        }
+        else return false;        
     }
 
 }

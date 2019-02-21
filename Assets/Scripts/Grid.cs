@@ -151,6 +151,6 @@ public class Grid : MonoBehaviour
 
     public Node GetNode(int x, int y)
     {
-        return grid[x, y];
+        return grid[x,y];
     }
 }
