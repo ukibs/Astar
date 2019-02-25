@@ -193,7 +193,7 @@ public class Pathfinding : MonoBehaviour
             path.Insert(0, currentNode);
             currentNode = currentNode.mParent;
         }
-        Debug.Log("Smoothing path");
+        
         path.Insert(0, startNode);
 
         Grid.path = SmoothPath(path);
@@ -253,21 +253,30 @@ public class Pathfinding : MonoBehaviour
         smoothPath.Add(path[path.Count-1]);
 
         Node currentNode = smoothPath[0];
-
-        int iterations = 0;
-        while(currentNode != path[0] && iterations < 20)
+        
+        int max = path.Count;
+        bool aux = false;
+        while(currentNode != path[0])
         {
-            for (int j = 0; j < path.Count; j++)
+            for (int j = 0; j < max; j++)
             {
                 if (BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[j].mGridX, path[j].mGridY))
                 {
                     smoothPath.Insert(0, path[j]);
                     currentNode = path[j];
+                    max = j;
+                    Debug.Log(max);
+                    aux = true;
                     break;
                 }
             }
-            iterations++;
-            Debug.Log(iterations);
+            if (!aux)
+            {
+                smoothPath.Insert(0, path[max - 1]);
+                currentNode = path[max - 1];
+                max = max - 1;
+            }
+            aux = false;
         }
         smoothPath.Insert(0, path[0]);
 
@@ -343,18 +352,22 @@ public class Pathfinding : MonoBehaviour
                 numerator -= longest;
                 x += dx1;
                 y += dy1;
+
+                distance += cNode.mCostMultiplier;
+
             }
             else
             {
                 x += dx2;
                 y += dy2;
-            }
 
-            distance += cNode.mCostMultiplier;
+                distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
+
+            }
         }
         
         float gCostDif = startNode.gCost - destNode.gCost;
-        if (gCostDif > distance)
+        if (gCostDif * 1.5f >= distance )
         {
             return true;
         }
