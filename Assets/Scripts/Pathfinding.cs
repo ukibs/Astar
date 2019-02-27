@@ -196,6 +196,7 @@ public class Pathfinding : MonoBehaviour
         
         path.Insert(0, startNode);
 
+        //Grid.path = path;
         Grid.path = SmoothPath(path);
     }
 
@@ -282,15 +283,25 @@ public class Pathfinding : MonoBehaviour
 
         return smoothPath;
     }
-
+    
     /***************************************************************************/
 
+    /// <summary>
+    /// Nos dice si podemos atajar o no
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="x2"></param>
+    /// <param name="y2"></param>
+    /// <returns></returns>
     public bool BresenhamWalkable(int x, int y, int x2, int y2)
     {
         //TODO: 4 Connectivity
         //TODO: Cost
         Node destNode = Grid.GetNode(x2, y2);
         Node startNode = Grid.GetNode(x, y);
+        //
+        float gCostDif = startNode.gCost - destNode.gCost;
         // Primero distancia manhatan entre xy y x2y2
         int w = x2 - x;
         int h = y2 - y;
@@ -331,47 +342,69 @@ public class Pathfinding : MonoBehaviour
             }
             dx2 = 0;
         }
-        // Parece que da longest o 1 si es más corto
+        // Obetenmos numerator del valor de longest con sus bits desplazados una posición a la derecha
+        // ex: 23 -> 11
         int numerator = longest >> 1;
         Node cNode;
         float distance = 0.0f;
         // Ahora recorremos el camino entre los dos nodos 
-        // Siguiendo una línea recta o diagonal
-        // Según los dx1, dy1 y dx2, dy2 que hayamos sacado
-        for (int i = 0; i <= longest; i++)
+        // Recorremos el camino a su largo
+
+        for (int i = 0; i < longest; i++)
         {
+            // Cogemos el nodo correspondiente a la x, y actual
+            // Empezando por el startNode
             cNode = Grid.GetNode(x, y);
             if (!cNode.mWalkable)
             {
-                return false;
+                return false;   // No se puede atajar
             }
 
+            // Vamos aumentando el numerator con el manhatan más corto
+            // Nota: Si el camino es totalmente recto shortest debería ser 0
             numerator += shortest;
+            // Y decidimos si avanzar en diagonal
             if (!(numerator < longest))
             {
+                // Recorrido diagnoal (debería)
                 numerator -= longest;
                 x += dx1;
                 y += dy1;
 
-                distance += cNode.mCostMultiplier;
+                //distance += cNode.mCostMultiplier;
+                distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
 
             }
             else
             {
+                // Recordar: Solo uno puede ser distinto de 0
+                // Así qye aquí no hay diagonal
                 x += dx2;
                 y += dy2;
 
-                distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
+                distance += cNode.mCostMultiplier;
+                //distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
 
             }
+            // El momento en el que la distancia sea mayor que el coste g entre ambos
+            // Ese atajo deja de ser valido y cortamos
+            if(distance > gCostDif * 1.01f)     // Le aplicamos un mínimo sobrecoste para "mayores" que son técnicamente iguales
+            {
+                Debug.Log("Can't tackle: distance " + distance + ", gCostDiff " + gCostDif);
+                return false;
+            }
         }
+
+        Debug.Log("Can tackle: distance " + distance + ", gCostDiff " + gCostDif);
+
+        return true;
         
-        float gCostDif = startNode.gCost - destNode.gCost;
-        if (gCostDif * 1.5f >= distance )
-        {
-            return true;
-        }
-        else return false;        
+        //float gCostDif = startNode.gCost - destNode.gCost;
+        //if (gCostDif * 1.0f >= distance )
+        //{
+        //    return true;
+        //}
+        //else return false;        
     }
 
 }
