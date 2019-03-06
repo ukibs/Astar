@@ -196,8 +196,8 @@ public class Pathfinding : MonoBehaviour
         
         path.Insert(0, startNode);
 
-        //Grid.path = path;
-        Grid.path = SmoothPath(path);
+        Grid.path = path;
+        //Grid.path = SmoothPath(path);
     }
 
     /***************************************************************************/
@@ -238,6 +238,7 @@ public class Pathfinding : MonoBehaviour
         /****/
         
         return GetDistance(nodeA, nodeB);
+        //return GetDistance(nodeA, nodeB) * 2f;
     }
 
     /***************************************************************************/
