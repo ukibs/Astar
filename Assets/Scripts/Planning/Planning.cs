@@ -139,9 +139,10 @@ public class Planning : MonoBehaviour
 
 	float Heuristic(NodePlanning nodeA, NodePlanning nodeB)
   {
-    // Heuristic function
-    return -World.PopulationCount( (int)(nodeA.mWorldState | nodeB.mWorldState) ) - World.PopulationCount( (int)(nodeA.mWorldState & nodeB.mWorldState) );
-	}
+        // Heuristic function
+        //return -World.PopulationCount( (int)(nodeA.mWorldState | nodeB.mWorldState) ) - World.PopulationCount( (int)(nodeA.mWorldState & nodeB.mWorldState) );
+        return 0;
+    }
 
   /***************************************************************************/
 

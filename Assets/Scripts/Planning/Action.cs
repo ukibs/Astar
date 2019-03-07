@@ -6,6 +6,7 @@ public class Action
   public ActionType         mActionType;
 	public World.WorldState   mPreconditions;
   public World.WorldState   mEffects;
+    public World.WorldState mNegEffects;
   public float              mCost;
   public string             mName;
 
@@ -28,11 +29,13 @@ public class Action
 	
   /***************************************************************************/
 
-	public Action( ActionType actionType, World.WorldState preconditions, World.WorldState effects, float cost, string name )
+	public Action( ActionType actionType, World.WorldState preconditions, World.WorldState effects, 
+        World.WorldState negativeEffects, float cost, string name )
   {
     mActionType     = actionType;
     mPreconditions  = preconditions;
     mEffects        = effects;
+    mNegEffects     = negativeEffects;
     mCost           = cost;
     mName           = name;
   }

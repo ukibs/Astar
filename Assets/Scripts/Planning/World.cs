@@ -26,7 +26,8 @@ public class World : MonoBehaviour
     WORLD_STATE_CLOSE_TO_ENEMY          =  16,
     WORLD_STATE_CLOSE_TO_GUN            =  32,
     WORLD_STATE_CLOSE_TO_KNIFE          =  64,
-    WORLD_STATE_LINE_OF_SIGHT_TO_ENEMY  = 128 
+    WORLD_STATE_LINE_OF_SIGHT_TO_ENEMY  = 128
+    //WORLD_STATE_NOT_CLOSE_TO_ENEMY      = 
   }
 
   /***************************************************************************/
@@ -39,6 +40,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_STAB,
         WorldState.WORLD_STATE_CLOSE_TO_ENEMY | WorldState.WORLD_STATE_KNIFE_OWNED,
         WorldState.WORLD_STATE_ENEMY_DEAD,
+        WorldState.WORLD_STATE_NONE,
         5.0f, "Stab" )
     );
 
@@ -47,6 +49,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_SHOOT,
         WorldState.WORLD_STATE_LINE_OF_SIGHT_TO_ENEMY | WorldState.WORLD_STATE_GUN_LOADED | WorldState.WORLD_STATE_GUN_OWNED,
         WorldState.WORLD_STATE_ENEMY_DEAD,
+        WorldState.WORLD_STATE_NONE,
         100.0f, "Shoot" )
     );
 
@@ -55,6 +58,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_LOAD_GUN,
         WorldState.WORLD_STATE_GUN_OWNED,
         WorldState.WORLD_STATE_GUN_LOADED,
+        WorldState.WORLD_STATE_NONE,
         1.0f, "Load gun" )
     );
 
@@ -63,6 +67,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_PICK_UP_GUN,
         WorldState.WORLD_STATE_CLOSE_TO_GUN,
         WorldState.WORLD_STATE_GUN_OWNED,
+        WorldState.WORLD_STATE_NONE,
         1.0f, "Pick up gun" )
     );
 
@@ -71,6 +76,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_PICK_UP_KNIFE,
         WorldState.WORLD_STATE_CLOSE_TO_KNIFE,
         WorldState.WORLD_STATE_KNIFE_OWNED,
+        WorldState.WORLD_STATE_NONE,
         1.0f, "Pick up knife" )
     );
 
@@ -79,6 +85,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_GO_TO_ENEMY,
         WorldState.WORLD_STATE_NONE,
         WorldState.WORLD_STATE_CLOSE_TO_ENEMY,
+        WorldState.WORLD_STATE_CLOSE_TO_KNIFE | WorldState.WORLD_STATE_CLOSE_TO_GUN,
         1.0f, "Go to enemy" )
     );
 
@@ -87,6 +94,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_GO_TO_GUN,
         WorldState.WORLD_STATE_NONE,
         WorldState.WORLD_STATE_CLOSE_TO_GUN,
+        WorldState.WORLD_STATE_CLOSE_TO_ENEMY | WorldState.WORLD_STATE_CLOSE_TO_KNIFE,
         20.0f, "Go to gun" )
     );
 
@@ -95,6 +103,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_GO_TO_KNIFE,
         WorldState.WORLD_STATE_NONE,
         WorldState.WORLD_STATE_CLOSE_TO_KNIFE,
+        WorldState.WORLD_STATE_CLOSE_TO_ENEMY | WorldState.WORLD_STATE_CLOSE_TO_KNIFE,
         20.0f, "Go to knife" )
     );
 
@@ -103,6 +112,7 @@ public class World : MonoBehaviour
         Action.ActionType.ACTION_TYPE_GET_LINE_OF_SIGHT_TO_ENEMY,
         WorldState.WORLD_STATE_GUN_LOADED | WorldState.WORLD_STATE_GUN_OWNED,
         WorldState.WORLD_STATE_LINE_OF_SIGHT_TO_ENEMY,
+        WorldState.WORLD_STATE_NONE,
         10.0f, "Get line of sight to enemy" )
     );
 
@@ -119,7 +129,7 @@ public class World : MonoBehaviour
       // If preconditions are met we can apply effects and the new state is valid
       if( ( node.mWorldState & action.mPreconditions ) == action.mPreconditions ){
         // Apply action and effects
-        NodePlanning newNodePlanning = new NodePlanning( node.mWorldState | action.mEffects, action );
+        NodePlanning newNodePlanning = new NodePlanning( node.mWorldState | action.mEffects &~ action.mNegEffects, action );
         neighbours.Add( newNodePlanning );
       }
     }
