@@ -2,6 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum Heuristics
+{
+    Euclidean,
+    Manhattan,
+    Diagonal
+}
+
 public class Pathfinding : MonoBehaviour
 {
 
@@ -18,7 +25,7 @@ public class Pathfinding : MonoBehaviour
     float TimeBetweenSteps = 0.01f;
 
     bool EightConnectivity = true;
-
+    public Heuristics heuristic = Heuristics.Euclidean;
 
     /***************************************************************************/
 
@@ -28,6 +35,12 @@ public class Pathfinding : MonoBehaviour
 
         Iterations = 0;
         LastStepTime = 0.0f;
+
+        if (heuristic == Heuristics.Manhattan)
+        {
+            EightConnectivity = false;
+        }
+        else EightConnectivity = true;
     }
 
     /***************************************************************************/
@@ -207,22 +220,21 @@ public class Pathfinding : MonoBehaviour
         // Distance function
         //nodeA.mGridX   nodeB.mGridX
         //nodeA.mGridY   nodeB.mGridY
-        if (EightConnectivity)
+        float distance = 0;
+
+        switch (heuristic)
         {
-            /****/
-            //TODO
-            /****/
-            float distance = Mathf.Sqrt(Mathf.Pow(nodeA.mGridX - nodeB.mGridX, 2) + Mathf.Pow(nodeA.mGridY - nodeB.mGridY, 2));
-            return distance;
+            case Heuristics.Manhattan:
+                distance = Mathf.Abs(nodeA.mGridX - nodeB.mGridX) + Mathf.Abs(nodeA.mGridY - nodeB.mGridY);
+                break;
+            case Heuristics.Euclidean:
+                distance = Mathf.Sqrt(Mathf.Pow(nodeA.mGridX - nodeB.mGridX, 2) + Mathf.Pow(nodeA.mGridY - nodeB.mGridY, 2));
+                break;
+            case Heuristics.Diagonal:
+                break;
         }
-        else
-        {
-            /****/
-            //TODO
-            /****/
-            float distance = Mathf.Abs(nodeA.mGridX - nodeB.mGridX) + Mathf.Abs(nodeA.mGridY - nodeB.mGridY);
-            return distance;
-        }
+
+        return distance;
     }
 
     /***************************************************************************/
@@ -238,18 +250,16 @@ public class Pathfinding : MonoBehaviour
         /****/
         
         return GetDistance(nodeA, nodeB);
-        //return GetDistance(nodeA, nodeB) * 2f;
     }
 
     /***************************************************************************/
 
-    // BRESENHAM STUFF --------------------------------------------------------------------------------------------
+    // SMOOTH & BRESENHAM --------------------------------------------------------------------------------------------
 
     /***************************************************************************/
 
     List<Node> SmoothPath(List<Node> path)
     {
-        //TODO
         List<Node> smoothPath = new List<Node>();
 
         smoothPath.Add(path[path.Count-1]);
@@ -267,7 +277,6 @@ public class Pathfinding : MonoBehaviour
                     smoothPath.Insert(0, path[j]);
                     currentNode = path[j];
                     max = j;
-                    Debug.Log(max);
                     aux = true;
                     break;
                 }
