@@ -231,6 +231,15 @@ public class Pathfinding : MonoBehaviour
                 distance = Mathf.Sqrt(Mathf.Pow(nodeA.mGridX - nodeB.mGridX, 2) + Mathf.Pow(nodeA.mGridY - nodeB.mGridY, 2));
                 break;
             case Heuristics.Diagonal:
+                float dx = Mathf.Abs(nodeA.mGridX - nodeB.mGridX);
+                float dy = Mathf.Abs(nodeA.mGridY - nodeB.mGridY);
+                float min = Mathf.Min(dx, dy);
+                float max = Mathf.Max(dx, dy);
+
+                float diagonalSteps = min;
+                float straightSteps = max - min;
+
+                distance = Mathf.Sqrt(2) * diagonalSteps + straightSteps;
                 break;
         }
 
