@@ -96,7 +96,7 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    // List<Node> to worck with the smoothing stuff
+    // List<Node> to worck with the smooth
     public List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int iterations)
     {
         CurrentStartNode = Grid.NodeFromWorldPoint(startPos);
@@ -112,31 +112,28 @@ public class Pathfinding : MonoBehaviour
         while (openSet.Count > 0 && node != CurrentTargetNode &&
               (iterations == -1 || currentIteration < iterations))
         {
-            // Select best node from open list
+            // Select first node from open list
             node = openSet[0];
 
             /****/
             //TODO
             /****/
-
+            //Check if the first one is the best option
             for (int i = 0; i < openSet.Count; i++)
             {
-                if (openSet[i].fCost < node.fCost || 
-                    (openSet[i].fCost == node.fCost && openSet[i].gCost < node.gCost))
+                if (openSet[i].fCost < node.fCost ||    //Get the smallest fCost
+                    (openSet[i].fCost == node.fCost && openSet[i].gCost < node.gCost)) //If fCost is equal choose the one with less gCost
                 {
-                    // Elegimos aqui el siguiente
                     node = openSet[i];
                 }
             }
 
             // Manage open/closed list
             openSet.Remove(node);
-            // Insertar ordenado en vez de con ADD???
             closedSet.Add(node);
             Grid.openSet = openSet;
             Grid.closedSet = closedSet;
-
-
+            
             // Check destination
             if (node != CurrentTargetNode)
             {
@@ -182,8 +179,6 @@ public class Pathfinding : MonoBehaviour
                 Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
                 Debug.LogFormat("Open nodes:   {0}", openSet.Count);
                 Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
-
-                //return closedSet;
             }
         }
 
@@ -271,8 +266,10 @@ public class Pathfinding : MonoBehaviour
     {
         List<Node> smoothPath = new List<Node>();
 
+        //Add the last node, the target one
         smoothPath.Add(path[path.Count-1]);
 
+        //Set the first node to compare, the destiny
         Node currentNode = smoothPath[0];
         
         int max = path.Count;
@@ -281,15 +278,17 @@ public class Pathfinding : MonoBehaviour
         {
             for (int j = 0; j < max; j++)
             {
+                //Check inversely which node is necessary
                 if (BresenhamWalkable(currentNode.mGridX, currentNode.mGridY, path[j].mGridX, path[j].mGridY))
                 {
                     smoothPath.Insert(0, path[j]);
-                    currentNode = path[j];
+                    currentNode = path[j];  // Change the node comparing
                     max = j;
-                    aux = true;
+                    aux = true; //one node has been selected
                     break;
                 }
             }
+            //if a node haven't been selected means that the next one from the current one is necessary
             if (!aux)
             {
                 smoothPath.Insert(0, path[max - 1]);
@@ -306,7 +305,7 @@ public class Pathfinding : MonoBehaviour
     /***************************************************************************/
 
     /// <summary>
-    /// Nos dice si podemos atajar o no
+    /// Check if the distance between those points is short than the difference of the gCosts
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -321,58 +320,60 @@ public class Pathfinding : MonoBehaviour
         Node startNode = Grid.GetNode(x, y);
         //
         float gCostDif = startNode.gCost - destNode.gCost;
-        // Primero distancia manhatan entre xy y x2y2
+        // Difference between x and y, to know how much we need to move
         int w = x2 - x;
         int h = y2 - y;
 
         int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
-        // 
+        // Move to the left
         if (w < 0)
             dx1 = -1;
-        else if (w > 0)
+        else if (w > 0) // Move to the right
             dx1 = 1;
         // 
-        if (h < 0)
+        if (h < 0) //Move up
             dy1 = -1;
-        else if (h > 0)
+        else if (h > 0) //Move down
             dy1 = 1;
-        //
-        if (w < 0)
+        
+        //If you only have to move in x
+        if (w < 0) //Left
             dx2 = -1;
-        else if (w > 0)
+        else if (w > 0) //Right
             dx2 = 1;
-        // Ponemos el ancho en longest
-        // y el alto en shortest
+
+        // Width -> longest // height -> shortest
         int longest = Mathf.Abs(w);
         int shortest = Mathf.Abs(h);
-        // Y si no es mas largo, que lo sea
+
+        // if it is no longest change the values, and means there is no move on x, only on y
         if (!(longest > shortest))
         {
             longest = Mathf.Abs(h);
             shortest = Mathf.Abs(w);
-            // Y aquí asigna el dy2
-            if (h < 0)
+            //Move in y
+            if (h < 0) //Up
             {
                 dy2 = -1;
             }
-            else if (h > 0)
+            else if (h > 0) //Down
             {
                 dy2 = 1;
             }
-            dx2 = 0;
+            dx2 = 0; //No move in x
         }
+
         // Obetenmos numerator del valor de longest con sus bits desplazados una posición a la derecha
         // ex: 23 -> 11
         int numerator = longest >> 1;
         Node cNode;
         float distance = 0.0f;
+
         // Ahora recorremos el camino entre los dos nodos 
         // Recorremos el camino a su largo
-
         for (int i = 0; i < longest; i++)
         {
-            // Cogemos el nodo correspondiente a la x, y actual
-            // Empezando por el startNode
+            // Get the current node (x, y)
             cNode = Grid.GetNode(x, y);
             if (!cNode.mWalkable)
             {
@@ -390,24 +391,20 @@ public class Pathfinding : MonoBehaviour
                 x += dx1;
                 y += dy1;
 
-                //distance += cNode.mCostMultiplier;
                 distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
 
             }
             else
             {
-                // Recordar: Solo uno puede ser distinto de 0
-                // Así qye aquí no hay diagonal
+                // Move in x or y only one will be different from 0
                 x += dx2;
                 y += dy2;
 
                 distance += cNode.mCostMultiplier;
-                //distance += Mathf.Sqrt(2) * cNode.mCostMultiplier;
-
             }
-            // El momento en el que la distancia sea mayor que el coste g entre ambos
-            // Ese atajo deja de ser valido y cortamos
-            if(distance > gCostDif * 1.01f)     // Le aplicamos un mínimo sobrecoste para "mayores" que son técnicamente iguales
+
+            // check if distance is bigger than the cost of the node
+            if(distance > gCostDif * 1.01f)     // * 1.01 to give a margin
             {
                 Debug.Log("Can't tackle: distance " + distance + ", gCostDiff " + gCostDif);
                 return false;
@@ -415,15 +412,7 @@ public class Pathfinding : MonoBehaviour
         }
 
         Debug.Log("Can tackle: distance " + distance + ", gCostDiff " + gCostDif);
-
-        return true;
-        
-        //float gCostDif = startNode.gCost - destNode.gCost;
-        //if (gCostDif * 1.0f >= distance )
-        //{
-        //    return true;
-        //}
-        //else return false;        
+        return true;    //This nodes have a short connection  
     }
 
 }
