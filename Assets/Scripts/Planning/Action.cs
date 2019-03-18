@@ -4,9 +4,9 @@ using System.Collections;
 public class Action
 {
   public ActionType         mActionType;
-	public World.WorldState   mPreconditions;
-  public World.WorldState   mEffects;
-    public World.WorldState mNegEffects;
+	public World.WorldStateMask   mPreconditions;
+  public World.WorldStateMask mEffects;
+    public World.WorldStateMask mNegEffects;
   public float              mCost;
   public string             mName;
 
@@ -33,22 +33,13 @@ public class Action
     AT_PICK_UP_RICE                                 ,
     AT_PICK_UP_CHICKEN                              ,
     AT_PICK_UP_BREAD                                ,
-        //ACTION_TYPE_STAB                          ,
-        //ACTION_TYPE_SHOOT                         ,
-        //ACTION_TYPE_LOAD_GUN                      ,
-        //ACTION_TYPE_PICK_UP_GUN                   ,
-        //ACTION_TYPE_PICK_UP_KNIFE                 ,
-        //ACTION_TYPE_GO_TO_ENEMY                   ,
-        //ACTION_TYPE_GO_TO_GUN                     ,
-        //ACTION_TYPE_GO_TO_KNIFE                   ,
-        //ACTION_TYPE_GET_LINE_OF_SIGHT_TO_ENEMY    ,
         ACTION_TYPES
   }
 	
   /***************************************************************************/
 
-	public Action( ActionType actionType, World.WorldState preconditions, World.WorldState effects, 
-        World.WorldState negativeEffects, float cost, string name )
+	public Action( ActionType actionType, World.WorldStateMask preconditions, World.WorldStateMask effects, 
+        World.WorldStateMask negativeEffects, float cost, string name )
   {
     mActionType     = actionType;
     mPreconditions  = preconditions;

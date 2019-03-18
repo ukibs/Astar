@@ -11,13 +11,17 @@ public class World : MonoBehaviour
 
     public List<NodePlanning> plan;
 
+    public List<Ingredient> ingredients = new List<Ingredient>();
+
     public WorldState mWorldState;
 
     public List<Action> mActionList;
 
+   
+
     /***************************************************************************/
 
-    public enum WorldState
+    public enum WorldStateMask
     {
         WORLD_STATE_NONE = 0,
         WS_RECIPE_DONE = 1,
@@ -29,15 +33,7 @@ public class World : MonoBehaviour
         WS_RICE_OWNED = 64,
         WS_CHICKEN_OWNED = 128,
         WS_BREAD_OWNED = 256,
-        WS_CLOSE_TO_KITCHEN = 512,
-        WS_CLOSE_TO_POTATO = 1024,
-        WS_CLOSE_TO_ONION = 2048,
-        WS_CLOSE_TO_EGGS = 4096,
-        WS_CLOSE_TO_MOJO = 8192,
-        WS_CLOSE_TO_SALT = 16384,
-        WS_CLOSE_TO_RICE = 32768,
-        WS_CLOSE_TO_CHICKEN = 65536,
-        WS_CLOSE_TO_BREAD = 131072
+        WS_CLOSE_TO_KITCHEN = 512
         /*WORLD_STATE_ENEMY_DEAD              =   1,
         WORLD_STATE_GUN_OWNED               =   2,
         WORLD_STATE_GUN_LOADED              =   4,
@@ -53,6 +49,7 @@ public class World : MonoBehaviour
 
     void Awake()
     {
+        mWorldState.cPos = transform.position;
         mActionList = new List<Action>();
         /*mActionList.Add(
           new Action( 
@@ -134,16 +131,30 @@ public class World : MonoBehaviour
             WorldState.WORLD_STATE_NONE,
             10.0f, "Get line of sight to enemy" )
         );*/
+        mActionList.Add(
+            new Action(
+            Action.ActionType.AT_GO_TO_BREAD,
+            WorldStateMask.WORLD_STATE_NONE,
+            WorldStateMask.WORLD_STATE_NONE,
+            WorldStateMask.WORLD_STATE_NONE,
+            10.0f, "Going to bread")
+        );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_PICK_UP_BREAD,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Picking up bread")
+       );
 
         mActionList.Add(
           new Action(
             Action.ActionType.AT_GO_TO_KITCHEN,
-            (WorldState.WS_POTATO_OWNED | WorldState.WS_ONION_OWNED | WorldState.WS_EGGS_OWNED) |
-            (WorldState.WS_POTATO_OWNED & WorldState.WS_MOJO_OWNED & WorldState.WS_SALT_OWNED) |
-            (WorldState.WS_RICE_OWNED & WorldState.WS_CHICKEN_OWNED & WorldState.WS_SALT_OWNED) |
-            (WorldState.WS_CHICKEN_OWNED & WorldState.WS_EGGS_OWNED & WorldState.WS_BREAD_OWNED),
-            WorldState.WS_RECIPE_DONE,
-            WorldState.WORLD_STATE_NONE,
+            (WorldStateMask.WS_BREAD_OWNED | WorldStateMask.WS_EGGS_OWNED),
+            WorldStateMask.WS_RECIPE_DONE,
+            WorldStateMask.WORLD_STATE_NONE,
             10.0f, "In the kitchen with a delicious recipe")
         );
 
@@ -158,10 +169,13 @@ public class World : MonoBehaviour
         foreach (Action action in mActionList)
         {
             // If preconditions are met we can apply effects and the new state is valid
-            if ((node.mWorldState & action.mPreconditions) == action.mPreconditions  && MeetsAdditionalPreconditions( node.mWorldState, action ) )
+            if ((node.mWorldState.mask & action.mPreconditions) == action.mPreconditions  && MeetsAdditionalPreconditions( node.mWorldState, action ) )
             {
                 // Apply action and effects
-                NodePlanning newNodePlanning = new NodePlanning(node.mWorldState | action.mEffects & ~action.mNegEffects, action);
+                NodePlanning newNodePlanning = new NodePlanning(node.mWorldState, action);
+                newNodePlanning.mWorldState.mask |= action.mEffects;
+                newNodePlanning.mWorldState.mask &= ~action.mNegEffects;
+                ApplyAdditionalEffects(newNodePlanning.mWorldState, action);
                 neighbours.Add(newNodePlanning);
             }
         }
@@ -169,9 +183,54 @@ public class World : MonoBehaviour
         return neighbours;
     }
 
+    public void ApplyAdditionalEffects(WorldState mWorldState, Action action)
+    {
+        switch (action.mActionType)
+        {
+            case Action.ActionType.AT_GO_TO_BREAD:
+                mWorldState.cPos = FindIngredientOfType(Ingredients.Bread);
+                break;
+            case Action.ActionType.AT_PICK_UP_BREAD:
+                mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Bread));
+                break;
+            case Action.ActionType.AT_PICK_UP_EGGS:
+                mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Eggs));
+                break;
+            default:
+                break;
+        }
+    }
+
     public bool MeetsAdditionalPreconditions(WorldState mWorldState, Action action)
     {
-        return true;
+        bool meets = false;
+        Vector3 ingredientPos = new Vector3();
+        switch (action.mActionType)
+        {
+            case Action.ActionType.AT_PICK_UP_BREAD:
+                ingredientPos = FindIngredientOfType(Ingredients.Bread);
+                break;
+            case Action.ActionType.AT_PICK_UP_EGGS:
+                ingredientPos = FindIngredientOfType(Ingredients.Eggs);
+                break;
+            default:
+                meets = true;
+                break;
+        }
+        if(!meets) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
+        return meets;
+    }
+
+    public Vector3 FindIngredientOfType(Ingredients type)
+    {
+        for(int i = 0; i < ingredients.Count; i++)
+        {
+            if(ingredients[i].type == type)
+            {
+                return ingredients[i].transform.position;
+            }
+        }
+        return new Vector3();
     }
 
     /***************************************************************************/

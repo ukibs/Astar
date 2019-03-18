@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NodePlanning
 {
-	public World.WorldState   mWorldState;
+	public WorldState   mWorldState;
   
   public Action             mAction;
                             
@@ -14,7 +14,7 @@ public class NodePlanning
 	
   /***************************************************************************/
 
-	public NodePlanning( World.WorldState worldState, Action action )
+	public NodePlanning( WorldState worldState, Action action )
   {
     mWorldState     = worldState;
     mAction         = action;
