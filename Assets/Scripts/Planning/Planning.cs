@@ -17,7 +17,7 @@ public class Planning : MonoBehaviour
 		mWorld = GetComponent<World>();
 
     Debug.Log( "Planning..." );
-    FindPlan( World.WorldState.WORLD_STATE_NONE, World.WorldState.WORLD_STATE_ENEMY_DEAD );
+    FindPlan( World.WorldState.WORLD_STATE_NONE, World.WorldState.WS_RECIPE_DONE );
 	}
 
   /***************************************************************************/
