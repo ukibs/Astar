@@ -17,7 +17,9 @@ public class Planning : MonoBehaviour
         mWorld = GetComponent<World>();
 
         Debug.Log("Planning...");
-        FindPlan(World.WorldState.WORLD_STATE_NONE, World.WorldState.WS_RECIPE_DONE);
+        WorldState fin = new WorldState();
+        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE;
+        FindPlan(new WorldState(), fin);
     }
 
     /***************************************************************************/
@@ -28,7 +30,7 @@ public class Planning : MonoBehaviour
 
     /***************************************************************************/
 
-    public List<NodePlanning> FindPlan(World.WorldState startWorldState, World.WorldState targetWorldState)
+    public List<NodePlanning> FindPlan(WorldState startWorldState, WorldState targetWorldState)
     {
         CurrentStartNode = new NodePlanning(startWorldState, null);
         CurrentTargetNode = new NodePlanning(targetWorldState, null);
