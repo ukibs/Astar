@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldState : MonoBehaviour
+public class WorldState
 {
     public Vector3 cPos;
     public World.WorldStateMask mask;
-    public List<Ingredient> ingredientsKept = new List<Ingredient>();
+    public List<Ingredient> ingredientsKept;
 
     public WorldState()
     {
-
+        cPos = new Vector3();
+        ingredientsKept = new List<Ingredient>();
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public bool Compare(WorldState world)
+    {
+        return (cPos == world.cPos && mask == world.mask);
+    }
 }

@@ -18,7 +18,7 @@ public class Planning : MonoBehaviour
 
         Debug.Log("Planning...");
         WorldState fin = new WorldState();
-        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE;
+        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE | World.WorldStateMask.WS_BREAD_OWNED | World.WorldStateMask.WS_EGGS_OWNED;
         FindPlan(new WorldState(), fin);
     }
 
@@ -41,7 +41,7 @@ public class Planning : MonoBehaviour
         mWorld.openSet = openSet;
 
         NodePlanning node = CurrentStartNode;
-        while (openSet.Count > 0 && ((node.mWorldState & CurrentTargetNode.mWorldState) != CurrentTargetNode.mWorldState))
+        while (openSet.Count > 0 && ((node.mWorldState.mask & CurrentTargetNode.mWorldState.mask) != CurrentTargetNode.mWorldState.mask))
         {
             // Select best node from open list
             node = openSet[0];
@@ -63,25 +63,25 @@ public class Planning : MonoBehaviour
 
 
             // Check destination
-            if (((node.mWorldState & CurrentTargetNode.mWorldState) != CurrentTargetNode.mWorldState))
+            if (((node.mWorldState.mask & CurrentTargetNode.mWorldState.mask) != CurrentTargetNode.mWorldState.mask))
             {
 
                 // Open neighbours
                 foreach (NodePlanning neighbour in mWorld.GetNeighbours(node))
                 {
-                    if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState == neighbour.mWorldState))
+                    if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
                     {
                         continue;
                     }
 
                     float newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-                    if (newCostToNeighbour < neighbour.gCost || !openSet.Any(n => n.mWorldState == neighbour.mWorldState))
+                    if (newCostToNeighbour < neighbour.gCost || !openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
                     {
                         neighbour.gCost = newCostToNeighbour;
                         neighbour.hCost = Heuristic(neighbour, CurrentTargetNode);
                         neighbour.mParent = node;
 
-                        if (!openSet.Any(n => n.mWorldState == neighbour.mWorldState))
+                        if (!openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
                         {
                             openSet.Add(neighbour);
                             mWorld.openSet = openSet;
@@ -89,7 +89,7 @@ public class Planning : MonoBehaviour
                         else
                         {
                             // Find neighbour and replace
-                            openSet[openSet.FindIndex(x => x.mWorldState == neighbour.mWorldState)] = neighbour;
+                            openSet[openSet.FindIndex(x => x.mWorldState.Compare(neighbour.mWorldState))] = neighbour;
                         }
                     }
                 }

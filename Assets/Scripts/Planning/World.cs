@@ -43,6 +43,7 @@ public class World : MonoBehaviour
         mWorldState = new WorldState();
         mWorldState.cPos = transform.position;
         mActionList = new List<Action>();
+        plan = new List<NodePlanning>();
      
         mActionList.Add(
             new Action(
@@ -120,6 +121,9 @@ public class World : MonoBehaviour
         {
             case Action.ActionType.AT_GO_TO_BREAD:
                 mWorldState.cPos = FindIngredientOfType(Ingredients.Bread);
+                break;
+            case Action.ActionType.AT_GO_TO_EGGS:
+                mWorldState.cPos = FindIngredientOfType(Ingredients.Eggs);
                 break;
             case Action.ActionType.AT_PICK_UP_BREAD:
                 mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Bread));
