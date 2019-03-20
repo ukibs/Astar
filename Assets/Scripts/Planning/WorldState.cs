@@ -14,6 +14,13 @@ public class WorldState
         ingredientsKept = new List<Ingredient>();
     }
 
+    public WorldState(WorldState w)
+    {
+        cPos = w.cPos;
+        mask = w.mask;
+        ingredientsKept = w.ingredientsKept;
+    }
+
     public bool Compare(WorldState world)
     {
         return (cPos == world.cPos && mask == world.mask);

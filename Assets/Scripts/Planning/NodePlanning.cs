@@ -16,7 +16,7 @@ public class NodePlanning
 
 	public NodePlanning( WorldState worldState, Action action )
   {
-    mWorldState     = worldState;
+    mWorldState     = new WorldState(worldState);
     mAction         = action;
 
     gCost           = 0.0f;
