@@ -18,7 +18,7 @@ public class Planning : MonoBehaviour
 
         Debug.Log("Planning...");
         WorldState fin = new WorldState();
-        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE | World.WorldStateMask.WS_BREAD_OWNED | World.WorldStateMask.WS_EGGS_OWNED;
+        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE;
         FindPlan(new WorldState(), fin);
     }
 

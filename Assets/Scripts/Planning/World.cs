@@ -51,7 +51,7 @@ public class World : MonoBehaviour
             WorldStateMask.WORLD_STATE_NONE,
             WorldStateMask.WORLD_STATE_NONE,
             WorldStateMask.WORLD_STATE_NONE,
-            10.0f, "Going to bread")
+            100.0f, "Going to bread")
         );
 
         mActionList.Add(
@@ -107,7 +107,7 @@ public class World : MonoBehaviour
                 NodePlanning newNodePlanning = new NodePlanning(node.mWorldState, action);
                 newNodePlanning.mWorldState.mask |= action.mEffects;
                 newNodePlanning.mWorldState.mask &= ~action.mNegEffects;
-                ApplyAdditionalEffects(newNodePlanning.mWorldState, action);
+                ApplyAdditionalEffects(newNodePlanning, newNodePlanning.mWorldState, action);
                 neighbours.Add(newNodePlanning);
             }
         }
@@ -115,15 +115,19 @@ public class World : MonoBehaviour
         return neighbours;
     }
 
-    public void ApplyAdditionalEffects(WorldState mWorldState, Action action)
+    public void ApplyAdditionalEffects(NodePlanning nodePlanning, WorldState mWorldState, Action action)
     {
         switch (action.mActionType)
         {
             case Action.ActionType.AT_GO_TO_BREAD:
-                mWorldState.cPos = FindIngredientOfType(Ingredients.Bread);
+                Vector3 ingredientPos = FindIngredientOfType(Ingredients.Bread);
+                nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
+                mWorldState.cPos = ingredientPos;
                 break;
             case Action.ActionType.AT_GO_TO_EGGS:
-                mWorldState.cPos = FindIngredientOfType(Ingredients.Eggs);
+                ingredientPos = FindIngredientOfType(Ingredients.Eggs);
+                nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
+                mWorldState.cPos = ingredientPos;
                 break;
             case Action.ActionType.AT_PICK_UP_BREAD:
                 mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Bread));

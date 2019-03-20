@@ -15,7 +15,6 @@ public class Action
   public enum ActionType
   {
     ACTION_TYPE_NONE                      = -1,
-    AT_DO_RECIPE                                    ,
     AT_GO_TO_KITCHEN                                ,
     AT_GO_TO_POTATO                                 ,
     AT_GO_TO_ONION                                  ,
