@@ -29,6 +29,7 @@ public class WorldState
     {
         int equals = 0;
 
+        //Check that contains the same ingredients
         for(int i = 0; i <ingredientsKept.Count; i++)
         {
             for(int j = 0; j < world.ingredientsKept.Count; j++)
@@ -41,6 +42,6 @@ public class WorldState
             }
         }
 
-        return (cPos == world.cPos && mask == world.mask && equals == ingredientsKept.Count);
+        return (cPos == world.cPos && mask == world.mask && equals == world.ingredientsKept.Count);
     }
 }

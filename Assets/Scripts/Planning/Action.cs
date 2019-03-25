@@ -9,6 +9,7 @@ public class Action
     public World.WorldStateMask mNegEffects;
   public float              mCost;
   public string             mName;
+    public Ingredients mIngredient;
 
   /***************************************************************************/
 
@@ -16,7 +17,9 @@ public class Action
   {
     ACTION_TYPE_NONE                      = -1,
     AT_GO_TO_KITCHEN                                ,
-    AT_GO_TO_POTATO                                 ,
+    AT_GO_TO,
+    AT_PICK_UP,
+    /*AT_GO_TO_POTATO                                 ,
     AT_GO_TO_ONION                                  ,
     AT_GO_TO_EGGS                                   ,
     AT_GO_TO_MOJO                                   ,
@@ -31,16 +34,17 @@ public class Action
     AT_PICK_UP_SALT                                 ,
     AT_PICK_UP_RICE                                 ,
     AT_PICK_UP_CHICKEN                              ,
-    AT_PICK_UP_BREAD                                ,
+    AT_PICK_UP_BREAD                                ,*/
         ACTION_TYPES
   }
 	
   /***************************************************************************/
 
-	public Action( ActionType actionType, World.WorldStateMask preconditions, World.WorldStateMask effects, 
+	public Action( ActionType actionType, Ingredients ingredient, World.WorldStateMask preconditions, World.WorldStateMask effects, 
         World.WorldStateMask negativeEffects, float cost, string name )
   {
     mActionType     = actionType;
+    mIngredient = ingredient;
     mPreconditions  = preconditions;
     mEffects        = effects;
     mNegEffects     = negativeEffects;

@@ -25,15 +25,7 @@ public class World : MonoBehaviour
     {
         WORLD_STATE_NONE = 0,
         WS_RECIPE_DONE = 1,
-        WS_POTATO_OWNED = 2,
-        WS_ONION_OWNED = 4,
-        WS_EGGS_OWNED = 8,
-        WS_MOJO_OWNED = 16,
-        WS_SALT_OWNED = 32,
-        WS_RICE_OWNED = 64,
-        WS_CHICKEN_OWNED = 128,
-        WS_BREAD_OWNED = 256,
-        WS_CLOSE_TO_KITCHEN = 512
+        WS_CLOSE_TO_KITCHEN = 2
     }
 
     /***************************************************************************/
@@ -43,100 +35,37 @@ public class World : MonoBehaviour
         mWorldState = new WorldState();
         mWorldState.cPos = transform.position;
         mActionList = new List<Action>();
-     
-        mActionList.Add(
-            new Action(
-            Action.ActionType.AT_GO_TO_BREAD,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            100.0f, "Going to bread")
-        );
 
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_PICK_UP_BREAD,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WS_BREAD_OWNED,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Picking up bread")
-       );
+        for (int i = 0; i < (int)Ingredients.Count; i++)
+        {
+            mActionList.Add(
+              new Action(
+                Action.ActionType.AT_GO_TO,
+                (Ingredients)i,
+                WorldStateMask.WORLD_STATE_NONE,
+                WorldStateMask.WORLD_STATE_NONE,
+                WorldStateMask.WORLD_STATE_NONE,
+                10.0f, "Going to "+ (Ingredients)i)
+            );
+        }
 
-        mActionList.Add(
-            new Action(
-            Action.ActionType.AT_GO_TO_EGGS,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            10.0f, "Going to eggs")
-        );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_PICK_UP_EGGS,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WS_EGGS_OWNED,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Picking up eggs")
-       );
-
-       /* mActionList.Add(
-            new Action(
-            Action.ActionType.AT_GO_TO_ONION,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            WorldStateMask.WORLD_STATE_NONE,
-            10.0f, "Going to onion")
-        );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_PICK_UP_ONION,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WS_ONION_OWNED,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Picking up onion")
-       );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_GO_TO_POTATO,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Going to potatoes")
-       );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_PICK_UP_POTATO,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WS_POTATO_OWNED,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Picking up potatos")
-       );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_GO_TO_CHICKEN,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Going to chicken")
-       );
-
-        mActionList.Add(
-           new Action(
-           Action.ActionType.AT_PICK_UP_CHICKEN,
-           WorldStateMask.WORLD_STATE_NONE,
-           WorldStateMask.WS_CHICKEN_OWNED,
-           WorldStateMask.WORLD_STATE_NONE,
-           10.0f, "Picking up chicken")
-       );*/
+        for (int i = 0; i < (int)Ingredients.Count; i++)
+        {
+            mActionList.Add(
+              new Action(
+                Action.ActionType.AT_PICK_UP,
+                (Ingredients)i,
+                WorldStateMask.WORLD_STATE_NONE,
+                WorldStateMask.WORLD_STATE_NONE,
+                WorldStateMask.WORLD_STATE_NONE,
+                5.0f, "Picking up " + (Ingredients)i)
+            );
+        }
 
         mActionList.Add(
           new Action(
             Action.ActionType.AT_GO_TO_KITCHEN,
+            Ingredients.Count,
             WorldStateMask.WORLD_STATE_NONE,
             WorldStateMask.WS_RECIPE_DONE,
             WorldStateMask.WORLD_STATE_NONE,
@@ -172,21 +101,13 @@ public class World : MonoBehaviour
     {
         switch (action.mActionType)
         {
-            case Action.ActionType.AT_GO_TO_BREAD:
-                Vector3 ingredientPos = FindIngredientOfType(Ingredients.Bread);
+            case Action.ActionType.AT_GO_TO:
+                Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
                 nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
                 mWorldState.cPos = ingredientPos;
                 break;
-            case Action.ActionType.AT_GO_TO_EGGS:
-                ingredientPos = FindIngredientOfType(Ingredients.Eggs);
-                nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
-                mWorldState.cPos = ingredientPos;
-                break;
-            case Action.ActionType.AT_PICK_UP_BREAD:
-                mWorldState.ingredientsKept.Add(Ingredients.Bread);
-                break;
-            case Action.ActionType.AT_PICK_UP_EGGS:
-                mWorldState.ingredientsKept.Add(Ingredients.Eggs);
+            case Action.ActionType.AT_PICK_UP:
+                mWorldState.ingredientsKept.Add(action.mIngredient);
                 break;
             default:
                 break;
@@ -200,13 +121,9 @@ public class World : MonoBehaviour
         Vector3 ingredientPos = new Vector3();
         switch (action.mActionType)
         {
-            case Action.ActionType.AT_PICK_UP_BREAD:
-                ingredientPos = FindIngredientOfType(Ingredients.Bread);
-                if (!mWorldState.ingredientsKept.Contains(Ingredients.Bread))  changePos = true;
-                break;
-            case Action.ActionType.AT_PICK_UP_EGGS:
-                ingredientPos = FindIngredientOfType(Ingredients.Eggs);
-                if(!mWorldState.ingredientsKept.Contains(Ingredients.Eggs)) changePos = true;
+            case Action.ActionType.AT_PICK_UP:
+                ingredientPos = FindIngredientOfType(action.mIngredient);
+                if (!mWorldState.ingredientsKept.Contains(action.mIngredient))  changePos = true;
                 break;
             case Action.ActionType.AT_GO_TO_KITCHEN:
                 meets = mWorldState.ingredientsKept.Count == 2 ? true: false;

@@ -7,7 +7,8 @@ using System.Text;
 public enum Ingredients
 {
     Bread,
-    Eggs
+    Eggs,
+    Count
 }
 
 public class Ingredient : MonoBehaviour
