@@ -82,9 +82,63 @@ public class World : MonoBehaviour
        );
 
         mActionList.Add(
+            new Action(
+            Action.ActionType.AT_GO_TO_ONION,
+            WorldStateMask.WORLD_STATE_NONE,
+            WorldStateMask.WORLD_STATE_NONE,
+            WorldStateMask.WORLD_STATE_NONE,
+            10.0f, "Going to onion")
+        );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_PICK_UP_ONION,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WS_ONION_OWNED,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Picking up onion")
+       );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_GO_TO_POTATO,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Going to potatoes")
+       );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_PICK_UP_POTATO,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WS_POTATO_OWNED,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Picking up potatos")
+       );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_GO_TO_CHICKEN,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Going to chicken")
+       );
+
+        mActionList.Add(
+           new Action(
+           Action.ActionType.AT_PICK_UP_CHICKEN,
+           WorldStateMask.WORLD_STATE_NONE,
+           WorldStateMask.WS_CHICKEN_OWNED,
+           WorldStateMask.WORLD_STATE_NONE,
+           10.0f, "Picking up chicken")
+       );
+
+        mActionList.Add(
           new Action(
             Action.ActionType.AT_GO_TO_KITCHEN,
-            (WorldStateMask.WS_BREAD_OWNED | WorldStateMask.WS_EGGS_OWNED),
+            WorldStateMask.WORLD_STATE_NONE,
             WorldStateMask.WS_RECIPE_DONE,
             WorldStateMask.WORLD_STATE_NONE,
             10.0f, "In the kitchen with a delicious recipe")
