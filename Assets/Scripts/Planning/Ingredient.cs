@@ -13,10 +13,5 @@ public enum Ingredients
 public class Ingredient : MonoBehaviour
 {
     public Ingredients type;
-
-    public Ingredient(Ingredients t)
-    {
-        type = t;
-    }
 }
 

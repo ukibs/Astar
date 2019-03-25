@@ -43,7 +43,6 @@ public class World : MonoBehaviour
         mWorldState = new WorldState();
         mWorldState.cPos = transform.position;
         mActionList = new List<Action>();
-        plan = new List<NodePlanning>();
      
         mActionList.Add(
             new Action(
@@ -81,7 +80,7 @@ public class World : MonoBehaviour
            10.0f, "Picking up eggs")
        );
 
-        mActionList.Add(
+       /* mActionList.Add(
             new Action(
             Action.ActionType.AT_GO_TO_ONION,
             WorldStateMask.WORLD_STATE_NONE,
@@ -133,7 +132,7 @@ public class World : MonoBehaviour
            WorldStateMask.WS_CHICKEN_OWNED,
            WorldStateMask.WORLD_STATE_NONE,
            10.0f, "Picking up chicken")
-       );
+       );*/
 
         mActionList.Add(
           new Action(
@@ -184,10 +183,10 @@ public class World : MonoBehaviour
                 mWorldState.cPos = ingredientPos;
                 break;
             case Action.ActionType.AT_PICK_UP_BREAD:
-                mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Bread));
+                mWorldState.ingredientsKept.Add(Ingredients.Bread);
                 break;
             case Action.ActionType.AT_PICK_UP_EGGS:
-                mWorldState.ingredientsKept.Add(new Ingredient(Ingredients.Eggs));
+                mWorldState.ingredientsKept.Add(Ingredients.Eggs);
                 break;
             default:
                 break;
@@ -197,20 +196,26 @@ public class World : MonoBehaviour
     public bool MeetsAdditionalPreconditions(WorldState mWorldState, Action action)
     {
         bool meets = false;
+        bool changePos = false;
         Vector3 ingredientPos = new Vector3();
         switch (action.mActionType)
         {
             case Action.ActionType.AT_PICK_UP_BREAD:
                 ingredientPos = FindIngredientOfType(Ingredients.Bread);
+                if (!mWorldState.ingredientsKept.Contains(Ingredients.Bread))  changePos = true;
                 break;
             case Action.ActionType.AT_PICK_UP_EGGS:
                 ingredientPos = FindIngredientOfType(Ingredients.Eggs);
+                if(!mWorldState.ingredientsKept.Contains(Ingredients.Eggs)) changePos = true;
+                break;
+            case Action.ActionType.AT_GO_TO_KITCHEN:
+                meets = mWorldState.ingredientsKept.Count == 2 ? true: false;
                 break;
             default:
                 meets = true;
                 break;
         }
-        if(!meets) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
+        if(changePos) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
         return meets;
     }
 
@@ -223,7 +228,7 @@ public class World : MonoBehaviour
                 return ingredients[i].transform.position;
             }
         }
-        return new Vector3();
+        return Vector3.one;
     }
 
     /***************************************************************************/
