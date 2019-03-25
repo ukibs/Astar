@@ -8,6 +8,12 @@ public enum Ingredients
 {
     Bread,
     Eggs,
+    Potato,
+    Onion,
+    Chicken,
+    Rice,
+    Salt,
+    Mojo,
     Count
 }
 

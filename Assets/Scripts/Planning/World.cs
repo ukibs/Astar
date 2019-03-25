@@ -17,7 +17,7 @@ public class World : MonoBehaviour
 
     public List<Action> mActionList;
 
-   
+    public List<Recipe> recipes = new List<Recipe>();
 
     /***************************************************************************/
 
@@ -35,6 +35,8 @@ public class World : MonoBehaviour
         mWorldState = new WorldState();
         mWorldState.cPos = transform.position;
         mActionList = new List<Action>();
+
+        ingredients = FindObjectsOfType<Ingredient>().ToList();
 
         for (int i = 0; i < (int)Ingredients.Count; i++)
         {
@@ -121,12 +123,16 @@ public class World : MonoBehaviour
         Vector3 ingredientPos = new Vector3();
         switch (action.mActionType)
         {
+            case Action.ActionType.AT_GO_TO:
+                meets = ValidIngredient(mWorldState, action.mIngredient);
+                break;
             case Action.ActionType.AT_PICK_UP:
                 ingredientPos = FindIngredientOfType(action.mIngredient);
+                //Check if you already have the ingredient to not go again for it
                 if (!mWorldState.ingredientsKept.Contains(action.mIngredient))  changePos = true;
                 break;
             case Action.ActionType.AT_GO_TO_KITCHEN:
-                meets = mWorldState.ingredientsKept.Count == 2 ? true: false;
+                meets = RecipeCompleted(mWorldState) ? true: false;
                 break;
             default:
                 meets = true;
@@ -134,6 +140,85 @@ public class World : MonoBehaviour
         }
         if(changePos) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
         return meets;
+    }
+
+    private bool ValidIngredient(WorldState world, Ingredients ingredient)
+    {
+        if (world.ingredientsKept.Count == 0) return true;
+
+        bool valid = false;
+
+        List<Ingredients> possibleIngredients = new List<Ingredients>();
+        possibleIngredients = FindPossibleIngredients(world.ingredientsKept[0]);
+
+        for (int i = 1; i < world.ingredientsKept.Count; i++)
+        {
+            List<Ingredients> ingredients = new List<Ingredients>();
+            ingredients = FindPossibleIngredients(world.ingredientsKept[i]);
+            for(int  j = 0; j < possibleIngredients.Count; j++)
+            {
+                if(!ingredients.Contains(possibleIngredients[j]))
+                {
+                    possibleIngredients.RemoveAt(j);
+                }
+            }
+        }
+
+        for(int i = 0; i < possibleIngredients.Count; i++)
+        {
+            if(possibleIngredients[i] == ingredient)
+            {
+                valid = true;
+                break;
+            }
+        }
+
+        return valid;
+    }
+
+    private List<Ingredients> FindPossibleIngredients(Ingredients ingredient)
+    {
+        List<Ingredients> list = new List<Ingredients>();
+
+        for(int i = 0; i < recipes.Count; i++)
+        {
+            if(recipes[i].ingredients.Contains(ingredient))
+            {
+                for(int j = 0; j < recipes[i].ingredients.Length; j++)
+                {
+                    list.Add(recipes[i].ingredients[j]);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    private bool RecipeCompleted(WorldState world)
+    {
+        bool complete = false;
+
+        foreach (Recipe r in recipes)
+        {
+            int equals = 0;
+            foreach (Ingredients i in world.ingredientsKept)
+            {
+                foreach (Ingredients ing in r.ingredients)
+                {
+                    if (i == ing)
+                    {
+                        equals++;
+                        break;
+                    }
+                }
+            }
+            if (equals == r.ingredients.Length)
+            {
+                complete = true;
+            }
+        }
+
+        return complete;
     }
 
     public Vector3 FindIngredientOfType(Ingredients type)
