@@ -8,6 +8,7 @@ public class Planning : MonoBehaviour
     NodePlanning CurrentStartNode;
     NodePlanning CurrentTargetNode;
 
+    public WorldState fin;
     World mWorld;
 
     /***************************************************************************/
@@ -17,8 +18,6 @@ public class Planning : MonoBehaviour
         mWorld = GetComponent<World>();
 
         Debug.Log("Planning...");
-        WorldState fin = new WorldState();
-        fin.mask |= World.WorldStateMask.WS_RECIPE_DONE;
         FindPlan(new WorldState(), fin);
     }
 
@@ -41,7 +40,7 @@ public class Planning : MonoBehaviour
         mWorld.openSet = openSet;
 
         NodePlanning node = CurrentStartNode;
-        while (openSet.Count > 0 && ((node.mWorldState.mask & CurrentTargetNode.mWorldState.mask) != CurrentTargetNode.mWorldState.mask))
+        while (openSet.Count > 0 && !node.mWorldState.CompareFinal(fin))
         {
             // Select best node from open list
             node = openSet[0];
@@ -63,7 +62,7 @@ public class Planning : MonoBehaviour
 
 
             // Check destination
-            if (((node.mWorldState.mask & CurrentTargetNode.mWorldState.mask) != CurrentTargetNode.mWorldState.mask))
+            if (!node.mWorldState.CompareFinal(fin))
             {
 
                 // Open neighbours

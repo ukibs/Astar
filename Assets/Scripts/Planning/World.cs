@@ -11,9 +11,9 @@ public class World : MonoBehaviour
 
     public List<NodePlanning> plan;
 
-    public List<Ingredient> ingredients = new List<Ingredient>();
+    List<Ingredient> ingredients = new List<Ingredient>();
 
-    public WorldState mWorldState;
+    WorldState mWorldState;
 
     public List<Action> mActionList;
 
@@ -111,6 +111,9 @@ public class World : MonoBehaviour
             case Action.ActionType.AT_PICK_UP:
                 mWorldState.ingredientsKept.Add(action.mIngredient);
                 break;
+            case Action.ActionType.AT_GO_TO_KITCHEN:
+                mWorldState.finalRecipe.Add(RecipeCompleted(mWorldState));
+                break;
             default:
                 break;
         }
@@ -132,7 +135,7 @@ public class World : MonoBehaviour
                 if (!mWorldState.ingredientsKept.Contains(action.mIngredient))  changePos = true;
                 break;
             case Action.ActionType.AT_GO_TO_KITCHEN:
-                meets = RecipeCompleted(mWorldState) ? true: false;
+                meets = RecipeCompleted(mWorldState) != null ? true: false;
                 break;
             default:
                 meets = true;
@@ -194,10 +197,8 @@ public class World : MonoBehaviour
         return list;
     }
 
-    private bool RecipeCompleted(WorldState world)
+    private Recipe RecipeCompleted(WorldState world)
     {
-        bool complete = false;
-
         foreach (Recipe r in recipes)
         {
             int equals = 0;
@@ -214,11 +215,11 @@ public class World : MonoBehaviour
             }
             if (equals == r.ingredients.Length)
             {
-                complete = true;
+                return r;
             }
         }
 
-        return complete;
+        return null;
     }
 
     public Vector3 FindIngredientOfType(Ingredients type)

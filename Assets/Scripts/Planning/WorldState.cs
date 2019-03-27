@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class WorldState
 {
     public Vector3 cPos;
     public World.WorldStateMask mask;
     public List<Ingredients> ingredientsKept;
+    public List<Recipe> finalRecipe;
 
     public WorldState()
     {
         cPos = new Vector3();
         ingredientsKept = new List<Ingredients>();
+        finalRecipe = new List<Recipe>();
     }
 
     public WorldState(WorldState w)
@@ -19,6 +22,7 @@ public class WorldState
         cPos = w.cPos;
         mask = w.mask;
         ingredientsKept = new List<Ingredients>();
+        finalRecipe = new List<Recipe>();
         for (int i = 0; i < w.ingredientsKept.Count; i++)
         {
             ingredientsKept.Add(w.ingredientsKept[i]);
@@ -43,5 +47,25 @@ public class WorldState
         }
 
         return (cPos == world.cPos && mask == world.mask && equals == world.ingredientsKept.Count);
+    }
+
+    public bool CompareFinal(WorldState final)
+    {
+        int equals = 0;
+
+        //Check that contains the same ingredients
+        for (int i = 0; i < finalRecipe.Count; i++)
+        {
+            for (int j = 0; j < final.finalRecipe.Count; j++)
+            {
+                if (finalRecipe[i] == final.finalRecipe[j])
+                {
+                    equals++;
+                    break;
+                }
+            }
+        }
+
+        return (equals == final.finalRecipe.Count);
     }
 }
