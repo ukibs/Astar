@@ -23,9 +23,15 @@ public class WorldState
         mask = w.mask;
         ingredientsKept = new List<Ingredients>();
         finalRecipe = new List<Recipe>();
+
         for (int i = 0; i < w.ingredientsKept.Count; i++)
         {
             ingredientsKept.Add(w.ingredientsKept[i]);
+        }
+
+        for(int i = 0; i < w.finalRecipe.Count; i++)
+        {
+            finalRecipe.Add(w.finalRecipe[i]);
         }
     }
 
@@ -49,6 +55,26 @@ public class WorldState
         return (cPos == world.cPos && mask == world.mask && equals == world.ingredientsKept.Count);
     }
 
+    public bool CompareBackward(WorldState world)
+    {
+        int equals = 0;
+
+        //Check that contains the same ingredients
+        for (int i = 0; i < ingredientsKept.Count; i++)
+        {
+            for (int j = 0; j < world.ingredientsKept.Count; j++)
+            {
+                if (ingredientsKept[i] == world.ingredientsKept[j])
+                {
+                    equals++;
+                    break;
+                }
+            }
+        }
+
+        return (cPos == world.cPos && equals == ingredientsKept.Count);
+    }
+
     public bool CompareFinal(WorldState final)
     {
         int equals = 0;
@@ -67,5 +93,11 @@ public class WorldState
         }
 
         return (equals == final.finalRecipe.Count);
+    }
+
+    public bool CompareFinalBackwards(WorldState final)
+    {
+
+        return (ingredientsKept.Count == final.finalRecipe.Count);
     }
 }

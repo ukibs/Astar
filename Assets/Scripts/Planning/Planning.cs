@@ -16,6 +16,10 @@ public class Planning : MonoBehaviour
     void Start()
     {
         mWorld = GetComponent<World>();
+        for(int i = 0; i < fin.finalRecipe[0].ingredients.Length; i++)
+        {
+            fin.ingredientsKept.Add(fin.finalRecipe[0].ingredients[i]);
+        }
 
         Debug.Log("Planning...");
         FindPlan(new WorldState(), fin);
@@ -43,7 +47,7 @@ public class Planning : MonoBehaviour
         mWorld.openSet = openSet;
 
         NodePlanning node = CurrentStartNode;
-        while (openSet.Count > 0 && !node.mWorldState.CompareFinal(fin))
+        while (openSet.Count > 0 && !node.mWorldState.CompareFinal(CurrentTargetNode.mWorldState))
         {
             // Select best node from open list
             node = openSet[0];
@@ -138,7 +142,7 @@ public class Planning : MonoBehaviour
         mWorld.openSet = openSet;
 
         NodePlanning node = CurrentStartNode;
-        while (openSet.Count > 0 && !node.mWorldState.CompareFinal(fin))
+        while (openSet.Count > 0 && !node.mWorldState.CompareFinalBackwards(CurrentTargetNode.mWorldState))
         {
             // Select best node from open list
             node = openSet[0];
@@ -160,25 +164,25 @@ public class Planning : MonoBehaviour
 
 
             // Check destination
-            if (!node.mWorldState.CompareFinal(fin))
+            if (!node.mWorldState.CompareFinalBackwards(CurrentTargetNode.mWorldState))
             {
 
                 // Open neighbours
                 foreach (NodePlanning neighbour in mWorld.GetNeighboursBackward(node))
                 {
-                    if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                    if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState.CompareBackward(neighbour.mWorldState)))
                     {
                         continue;
                     }
 
                     float newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-                    if (newCostToNeighbour < neighbour.gCost || !openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                    if (newCostToNeighbour < neighbour.gCost || !openSet.Any(n => n.mWorldState.CompareBackward(neighbour.mWorldState)))
                     {
                         neighbour.gCost = newCostToNeighbour;
                         neighbour.hCost = Heuristic(neighbour, CurrentTargetNode);
                         neighbour.mParent = node;
 
-                        if (!openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                        if (!openSet.Any(n => n.mWorldState.CompareBackward(neighbour.mWorldState)))
                         {
                             openSet.Add(neighbour);
                             mWorld.openSet = openSet;
@@ -186,7 +190,7 @@ public class Planning : MonoBehaviour
                         else
                         {
                             // Find neighbour and replace
-                            openSet[openSet.FindIndex(x => x.mWorldState.Compare(neighbour.mWorldState))] = neighbour;
+                            openSet[openSet.FindIndex(x => x.mWorldState.CompareBackward(neighbour.mWorldState))] = neighbour;
                         }
                     }
                 }

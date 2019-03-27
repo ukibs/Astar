@@ -106,18 +106,50 @@ public class World : MonoBehaviour
         foreach (Action action in mActionList)
         {
             // If preconditions are met we can apply effects and the new state is valid
-            if ((node.mWorldState.mask & action.mPreconditions) == action.mPreconditions && MeetsAdditionalPreconditions(node.mWorldState, action))
+            if (MeetConditions(node.mWorldState, action))
             {
                 // Apply action and effects
                 NodePlanning newNodePlanning = new NodePlanning(node.mWorldState, action);
-                newNodePlanning.mWorldState.mask |= action.mEffects;
-                newNodePlanning.mWorldState.mask &= ~action.mNegEffects;
-                ApplyAdditionalEffects(newNodePlanning, newNodePlanning.mWorldState, action);
+                ApplyBackwardEffects(newNodePlanning, newNodePlanning.mWorldState, action);
                 neighbours.Add(newNodePlanning);
             }
         }
 
         return neighbours;
+    }
+
+    public void ApplyBackwardEffects(NodePlanning node, WorldState world, Action action)
+    {
+        switch(action.mActionType)
+        {
+            case Action.ActionType.AT_PICK_UP:
+                world.ingredientsKept.Remove(action.mIngredient);
+                break;
+            case Action.ActionType.AT_GO_TO:
+                Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
+                node.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
+                mWorldState.cPos = ingredientPos;
+                break;
+        }
+    }
+
+    public bool MeetConditions(WorldState world, Action action)
+    {
+        bool meets = false;
+        Vector3 ingredientPos = new Vector3();
+        switch (action.mActionType)
+        {
+            case Action.ActionType.AT_GO_TO:
+                ingredientPos = FindIngredientOfType(action.mIngredient);
+                meets = ((world.cPos - ingredientPos).magnitude < 2 && !world.ingredientsKept.Contains(action.mIngredient)) ? true : false;
+                break;
+            case Action.ActionType.AT_PICK_UP:
+                ingredientPos = FindIngredientOfType(action.mIngredient);
+                meets = ((world.cPos - ingredientPos).magnitude >= 0 && world.ingredientsKept.Contains(action.mIngredient)) ? true : false;
+                break;
+        }
+
+        return meets;
     }
 
     public void ApplyAdditionalEffects(NodePlanning nodePlanning, WorldState mWorldState, Action action)
