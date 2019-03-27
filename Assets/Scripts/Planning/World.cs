@@ -99,6 +99,27 @@ public class World : MonoBehaviour
         return neighbours;
     }
 
+    public List<NodePlanning> GetNeighboursBackward(NodePlanning node)
+    {
+        List<NodePlanning> neighbours = new List<NodePlanning>();
+
+        foreach (Action action in mActionList)
+        {
+            // If preconditions are met we can apply effects and the new state is valid
+            if ((node.mWorldState.mask & action.mPreconditions) == action.mPreconditions && MeetsAdditionalPreconditions(node.mWorldState, action))
+            {
+                // Apply action and effects
+                NodePlanning newNodePlanning = new NodePlanning(node.mWorldState, action);
+                newNodePlanning.mWorldState.mask |= action.mEffects;
+                newNodePlanning.mWorldState.mask &= ~action.mNegEffects;
+                ApplyAdditionalEffects(newNodePlanning, newNodePlanning.mWorldState, action);
+                neighbours.Add(newNodePlanning);
+            }
+        }
+
+        return neighbours;
+    }
+
     public void ApplyAdditionalEffects(NodePlanning nodePlanning, WorldState mWorldState, Action action)
     {
         switch (action.mActionType)

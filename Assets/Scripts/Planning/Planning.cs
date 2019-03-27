@@ -19,6 +19,9 @@ public class Planning : MonoBehaviour
 
         Debug.Log("Planning...");
         FindPlan(new WorldState(), fin);
+        mWorld.plan = null;
+        Debug.Log("Planning backwards...");
+        FindPlanBackward(fin, new WorldState());
     }
 
     /***************************************************************************/
@@ -67,6 +70,101 @@ public class Planning : MonoBehaviour
 
                 // Open neighbours
                 foreach (NodePlanning neighbour in mWorld.GetNeighbours(node))
+                {
+                    if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                    {
+                        continue;
+                    }
+
+                    float newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
+                    if (newCostToNeighbour < neighbour.gCost || !openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                    {
+                        neighbour.gCost = newCostToNeighbour;
+                        neighbour.hCost = Heuristic(neighbour, CurrentTargetNode);
+                        neighbour.mParent = node;
+
+                        if (!openSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
+                        {
+                            openSet.Add(neighbour);
+                            mWorld.openSet = openSet;
+                        }
+                        else
+                        {
+                            // Find neighbour and replace
+                            openSet[openSet.FindIndex(x => x.mWorldState.Compare(neighbour.mWorldState))] = neighbour;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Path found!
+
+                // End node must be copied
+                CurrentTargetNode.mParent = node.mParent;
+                CurrentTargetNode.mAction = node.mAction;
+                CurrentTargetNode.gCost = node.gCost;
+                CurrentTargetNode.hCost = node.hCost;
+
+                RetracePlan(CurrentStartNode, CurrentTargetNode);
+
+                Debug.Log("Statistics:");
+                Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
+                Debug.LogFormat("Open nodes:   {0}", openSet.Count);
+                Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
+            }
+        }
+
+        // Log plan
+        if (mWorld.plan != null)
+            Debug.Log("PLAN FOUND!");
+        else Debug.Log("Not plan found");
+        for (int i = 0; i < mWorld.plan.Count; ++i)
+        {
+            Debug.LogFormat("{0} Accumulated cost: {1}", mWorld.plan[i].mAction.mName, mWorld.plan[i].gCost);
+        }
+
+        return mWorld.plan;
+    }
+
+    public List<NodePlanning> FindPlanBackward(WorldState startWorldState, WorldState targetWorldState)
+    {
+        CurrentStartNode = new NodePlanning(startWorldState, null);
+        CurrentTargetNode = new NodePlanning(targetWorldState, null);
+
+        List<NodePlanning> openSet = new List<NodePlanning>();
+        HashSet<NodePlanning> closedSet = new HashSet<NodePlanning>();
+        openSet.Add(CurrentStartNode);
+        mWorld.openSet = openSet;
+
+        NodePlanning node = CurrentStartNode;
+        while (openSet.Count > 0 && !node.mWorldState.CompareFinal(fin))
+        {
+            // Select best node from open list
+            node = openSet[0];
+
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < node.fCost || (openSet[i].fCost == node.fCost && openSet[i].hCost < node.hCost))
+                {
+                    node = openSet[i];
+                }
+            }
+
+            // Manage open/closed list
+            openSet.Remove(node);
+            closedSet.Add(node);
+            mWorld.openSet = openSet;
+            mWorld.closedSet = closedSet;
+
+
+
+            // Check destination
+            if (!node.mWorldState.CompareFinal(fin))
+            {
+
+                // Open neighbours
+                foreach (NodePlanning neighbour in mWorld.GetNeighboursBackward(node))
                 {
                     if ( /*!neighbour.mWalkable ||*/ closedSet.Any(n => n.mWorldState.Compare(neighbour.mWorldState)))
                     {
