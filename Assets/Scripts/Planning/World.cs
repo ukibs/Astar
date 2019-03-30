@@ -124,11 +124,13 @@ public class World : MonoBehaviour
         {
             case Action.ActionType.AT_PICK_UP:
                 world.ingredientsKept.Remove(action.mIngredient);
+                
                 break;
             case Action.ActionType.AT_GO_TO:
                 Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
                 node.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
                 mWorldState.cPos = ingredientPos;
+                world.ingredientsVisited.Remove(action.mIngredient);
                 break;
         }
     }
@@ -136,16 +138,14 @@ public class World : MonoBehaviour
     public bool MeetConditions(WorldState world, Action action)
     {
         bool meets = false;
-        Vector3 ingredientPos = new Vector3();
+        Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
         switch (action.mActionType)
         {
             case Action.ActionType.AT_GO_TO:
-                ingredientPos = FindIngredientOfType(action.mIngredient);
-                meets = ((world.cPos - ingredientPos).magnitude < 2 && !world.ingredientsKept.Contains(action.mIngredient)) ? true : false;
+                meets = (!world.ingredientsKept.Contains(action.mIngredient) && world.finalRecipe[0].ingredients.Contains(action.mIngredient));
                 break;
             case Action.ActionType.AT_PICK_UP:
-                ingredientPos = FindIngredientOfType(action.mIngredient);
-                meets = ((world.cPos - ingredientPos).magnitude >= 0 && world.ingredientsKept.Contains(action.mIngredient)) ? true : false;
+                meets = ((world.cPos - ingredientPos).magnitude >= 2 && world.ingredientsKept.Contains(action.mIngredient) && (world.ingredientsVisited.Count) == world.ingredientsKept.Count);
                 break;
         }
 

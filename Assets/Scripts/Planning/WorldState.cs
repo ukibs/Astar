@@ -9,12 +9,14 @@ public class WorldState
     public World.WorldStateMask mask;
     public List<Ingredients> ingredientsKept;
     public List<Recipe> finalRecipe;
+    public List<Ingredients> ingredientsVisited;
 
     public WorldState()
     {
         cPos = new Vector3();
         ingredientsKept = new List<Ingredients>();
         finalRecipe = new List<Recipe>();
+        ingredientsVisited = new List<Ingredients>();
     }
 
     public WorldState(WorldState w)
@@ -23,6 +25,12 @@ public class WorldState
         mask = w.mask;
         ingredientsKept = new List<Ingredients>();
         finalRecipe = new List<Recipe>();
+        ingredientsVisited = new List<Ingredients>();
+
+        for(int i = 0; i < w.ingredientsVisited.Count; i++)
+        {
+            ingredientsVisited.Add(w.ingredientsVisited[i]);
+        }
 
         for (int i = 0; i < w.ingredientsKept.Count; i++)
         {
@@ -72,7 +80,21 @@ public class WorldState
             }
         }
 
-        return (cPos == world.cPos && equals == ingredientsKept.Count);
+        int equalVisited = 0;
+
+        for (int i = 0; i < ingredientsVisited.Count; i++)
+        {
+            for (int j = 0; j < world.ingredientsVisited.Count; j++)
+            {
+                if (ingredientsVisited[i] == world.ingredientsVisited[j])
+                {
+                    equalVisited++;
+                    break;
+                }
+            }
+        }
+
+        return (cPos == world.cPos && equals == ingredientsKept.Count && equalVisited == ingredientsVisited.Count);
     }
 
     public bool CompareFinal(WorldState final)
@@ -98,6 +120,6 @@ public class WorldState
     public bool CompareFinalBackwards(WorldState final)
     {
 
-        return (ingredientsKept.Count == final.finalRecipe.Count);
+        return (ingredientsKept.Count == final.finalRecipe.Count && ingredientsVisited.Count == final.ingredientsVisited.Count);
     }
 }

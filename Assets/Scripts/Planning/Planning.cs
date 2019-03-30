@@ -19,6 +19,7 @@ public class Planning : MonoBehaviour
         for(int i = 0; i < fin.finalRecipe[0].ingredients.Length; i++)
         {
             fin.ingredientsKept.Add(fin.finalRecipe[0].ingredients[i]);
+            fin.ingredientsVisited.Add(fin.finalRecipe[0].ingredients[i]);
         }
 
         Debug.Log("Planning...");
