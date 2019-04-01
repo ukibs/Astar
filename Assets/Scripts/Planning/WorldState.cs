@@ -99,6 +99,11 @@ public class WorldState
 
     public bool CompareFinal(WorldState final)
     {
+        if(final.finalRecipe.Count == 0)
+        {
+            return finalRecipe.Count > 0;
+        }
+
         int equals = 0;
 
         //Check that contains the same ingredients

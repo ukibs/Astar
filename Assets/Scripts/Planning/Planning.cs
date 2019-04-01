@@ -8,6 +8,7 @@ public class Planning : MonoBehaviour
     NodePlanning CurrentStartNode;
     NodePlanning CurrentTargetNode;
 
+    public WorldState finBackward;
     public WorldState fin;
     World mWorld;
 
@@ -16,17 +17,17 @@ public class Planning : MonoBehaviour
     void Start()
     {
         mWorld = GetComponent<World>();
-        for(int i = 0; i < fin.finalRecipe[0].ingredients.Length; i++)
+        for(int i = 0; i < finBackward.finalRecipe[0].ingredients.Length; i++)
         {
-            fin.ingredientsKept.Add(fin.finalRecipe[0].ingredients[i]);
-            fin.ingredientsVisited.Add(fin.finalRecipe[0].ingredients[i]);
+            finBackward.ingredientsKept.Add(finBackward.finalRecipe[0].ingredients[i]);
+            finBackward.ingredientsVisited.Add(finBackward.finalRecipe[0].ingredients[i]);
         }
 
         Debug.Log("Planning...");
         FindPlan(new WorldState(), fin);
         mWorld.plan = null;
         Debug.Log("Planning backwards...");
-        FindPlanBackward(fin, new WorldState());
+        FindPlanBackward(finBackward, new WorldState());
     }
 
     /***************************************************************************/
@@ -70,7 +71,7 @@ public class Planning : MonoBehaviour
 
 
             // Check destination
-            if (!node.mWorldState.CompareFinal(fin))
+            if (!node.mWorldState.CompareFinal(CurrentTargetNode.mWorldState))
             {
 
                 // Open neighbours

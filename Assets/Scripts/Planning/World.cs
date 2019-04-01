@@ -78,6 +78,7 @@ public class World : MonoBehaviour
 
     /***************************************************************************/
 
+    #region Forward
     public List<NodePlanning> GetNeighbours(NodePlanning node)
     {
         List<NodePlanning> neighbours = new List<NodePlanning>();
@@ -99,6 +100,54 @@ public class World : MonoBehaviour
         return neighbours;
     }
 
+    public void ApplyAdditionalEffects(NodePlanning nodePlanning, WorldState mWorldState, Action action)
+    {
+        switch (action.mActionType)
+        {
+            case Action.ActionType.AT_GO_TO:
+                Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
+                nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
+                mWorldState.cPos = ingredientPos;
+                break;
+            case Action.ActionType.AT_PICK_UP:
+                mWorldState.ingredientsKept.Add(action.mIngredient);
+                break;
+            case Action.ActionType.AT_GO_TO_KITCHEN:
+                mWorldState.finalRecipe.Add(RecipeCompleted(mWorldState));
+                break;
+            default:
+                break;
+        }
+    }
+
+    public bool MeetsAdditionalPreconditions(WorldState mWorldState, Action action)
+    {
+        bool meets = false;
+        bool changePos = false;
+        Vector3 ingredientPos = new Vector3();
+        switch (action.mActionType)
+        {
+            case Action.ActionType.AT_GO_TO:
+                meets = ValidIngredient(mWorldState, action.mIngredient);
+                break;
+            case Action.ActionType.AT_PICK_UP:
+                ingredientPos = FindIngredientOfType(action.mIngredient);
+                //Check if you already have the ingredient to not go again for it
+                if (!mWorldState.ingredientsKept.Contains(action.mIngredient)) changePos = true;
+                break;
+            case Action.ActionType.AT_GO_TO_KITCHEN:
+                meets = RecipeCompleted(mWorldState) != null ? true : false;
+                break;
+            default:
+                meets = true;
+                break;
+        }
+        if (changePos) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
+        return meets;
+    }
+    #endregion
+
+    #region Backward
     public List<NodePlanning> GetNeighboursBackward(NodePlanning node)
     {
         List<NodePlanning> neighbours = new List<NodePlanning>();
@@ -151,52 +200,7 @@ public class World : MonoBehaviour
 
         return meets;
     }
-
-    public void ApplyAdditionalEffects(NodePlanning nodePlanning, WorldState mWorldState, Action action)
-    {
-        switch (action.mActionType)
-        {
-            case Action.ActionType.AT_GO_TO:
-                Vector3 ingredientPos = FindIngredientOfType(action.mIngredient);
-                nodePlanning.mAction.mCost = (ingredientPos - mWorldState.cPos).magnitude;
-                mWorldState.cPos = ingredientPos;
-                break;
-            case Action.ActionType.AT_PICK_UP:
-                mWorldState.ingredientsKept.Add(action.mIngredient);
-                break;
-            case Action.ActionType.AT_GO_TO_KITCHEN:
-                mWorldState.finalRecipe.Add(RecipeCompleted(mWorldState));
-                break;
-            default:
-                break;
-        }
-    }
-
-    public bool MeetsAdditionalPreconditions(WorldState mWorldState, Action action)
-    {
-        bool meets = false;
-        bool changePos = false;
-        Vector3 ingredientPos = new Vector3();
-        switch (action.mActionType)
-        {
-            case Action.ActionType.AT_GO_TO:
-                meets = ValidIngredient(mWorldState, action.mIngredient);
-                break;
-            case Action.ActionType.AT_PICK_UP:
-                ingredientPos = FindIngredientOfType(action.mIngredient);
-                //Check if you already have the ingredient to not go again for it
-                if (!mWorldState.ingredientsKept.Contains(action.mIngredient))  changePos = true;
-                break;
-            case Action.ActionType.AT_GO_TO_KITCHEN:
-                meets = RecipeCompleted(mWorldState) != null ? true: false;
-                break;
-            default:
-                meets = true;
-                break;
-        }
-        if(changePos) meets = (ingredientPos - mWorldState.cPos).magnitude <= 2 ? true : false;
-        return meets;
-    }
+    #endregion
 
     private bool ValidIngredient(WorldState world, Ingredients ingredient)
     {
