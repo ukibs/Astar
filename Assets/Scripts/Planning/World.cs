@@ -194,7 +194,7 @@ public class World : MonoBehaviour
                 meets = (!world.ingredientsKept.Contains(action.mIngredient) && world.finalRecipe[0].ingredients.Contains(action.mIngredient));
                 break;
             case PlanningAction.ActionType.AT_PICK_UP:
-                meets = ((world.cPos - ingredientPos).magnitude >= 2 && world.ingredientsKept.Contains(action.mIngredient) && (world.ingredientsVisited.Count) == world.ingredientsKept.Count);
+                meets = (world.ingredientsKept.Contains(action.mIngredient) && (world.ingredientsVisited.Count) == world.ingredientsKept.Count);
                 break;
         }
 
