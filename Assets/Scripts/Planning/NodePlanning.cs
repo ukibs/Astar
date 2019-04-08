@@ -5,7 +5,7 @@ public class NodePlanning
 {
 	public WorldState   mWorldState;
   
-  public Action             mAction;
+  public PlanningAction             mAction;
                             
 	public float              gCost;
 	public float              hCost;
@@ -14,7 +14,7 @@ public class NodePlanning
 	
   /***************************************************************************/
 
-	public NodePlanning( WorldState worldState, Action action )
+	public NodePlanning( WorldState worldState, PlanningAction action )
   {
     mWorldState     = new WorldState(worldState);
     mAction         = action;

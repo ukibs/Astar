@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour
   public GameObject Astar;
 
 
-  List<Node> mPath;
+  List<AstarNode> mPath;
 
 	int targetIndex;
 

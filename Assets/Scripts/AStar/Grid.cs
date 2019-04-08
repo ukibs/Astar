@@ -10,13 +10,13 @@ public class Grid : MonoBehaviour
     public Vector2 gridWorldSize;
     public float nodeRadius;
 
-    public List<Node> openSet;
-    public HashSet<Node> closedSet;
+    public List<AstarNode> openSet;
+    public HashSet<AstarNode> closedSet;
 
-    public List<Node> path;
+    public List<AstarNode> path;
 
 
-    Node[,] grid;
+    AstarNode[,] grid;
 
     float nodeDiameter;
     int gridSizeX, gridSizeY;
@@ -37,7 +37,7 @@ public class Grid : MonoBehaviour
 
     void CreateGrid()
     {
-        grid = new Node[gridSizeX, gridSizeY];
+        grid = new AstarNode[gridSizeX, gridSizeY];
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
 
         for (int x = 0; x < gridSizeX; x++)
@@ -50,16 +50,16 @@ public class Grid : MonoBehaviour
                     (Physics.CheckSphere(worldPoint, nodeRadius, costMultiplierMask)) ?
                     1.5f : 1.0f;
 
-                grid[x, y] = new Node(walkable, worldPoint, x, y, costMultiplier);
+                grid[x, y] = new AstarNode(walkable, worldPoint, x, y, costMultiplier);
             }
         }
     }
 
     /***************************************************************************/
 
-    public List<Node> GetNeighbours(Node node, bool eightConnectivity)
+    public List<AstarNode> GetNeighbours(AstarNode node, bool eightConnectivity)
     {
-        List<Node> neighbours = new List<Node>();
+        List<AstarNode> neighbours = new List<AstarNode>();
 
         for (int x = -1; x <= 1; x++)
         {
@@ -89,7 +89,7 @@ public class Grid : MonoBehaviour
 
     /***************************************************************************/
 
-    public Node NodeFromWorldPoint(Vector3 worldPosition)
+    public AstarNode NodeFromWorldPoint(Vector3 worldPosition)
     {
         float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
         float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
@@ -109,7 +109,7 @@ public class Grid : MonoBehaviour
 
         if (grid != null)
         {
-            foreach (Node n in grid)
+            foreach (AstarNode n in grid)
             {
                 Gizmos.color = (n.mWalkable) ? Color.white : Color.red;
 
@@ -149,7 +149,7 @@ public class Grid : MonoBehaviour
 
     /***************************************************************************/
 
-    public Node GetNode(int x, int y)
+    public AstarNode GetNode(int x, int y)
     {
         return grid[x,y];
     }

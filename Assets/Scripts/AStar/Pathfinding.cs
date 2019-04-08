@@ -15,8 +15,8 @@ public class Pathfinding : MonoBehaviour
     public Transform mSeeker;
     public Transform mTarget;
 
-    Node CurrentStartNode;
-    Node CurrentTargetNode;
+    AstarNode CurrentStartNode;
+    AstarNode CurrentTargetNode;
 
     Grid Grid;
 
@@ -97,18 +97,18 @@ public class Pathfinding : MonoBehaviour
     /***************************************************************************/
 
     // List<Node> to worck with the smooth
-    public List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int iterations)
+    public List<AstarNode> FindPath(Vector3 startPos, Vector3 targetPos, int iterations)
     {
         CurrentStartNode = Grid.NodeFromWorldPoint(startPos);
         CurrentTargetNode = Grid.NodeFromWorldPoint(targetPos);
 
-        List<Node> openSet = new List<Node>();
-        HashSet<Node> closedSet = new HashSet<Node>();
+        List<AstarNode> openSet = new List<AstarNode>();
+        HashSet<AstarNode> closedSet = new HashSet<AstarNode>();
         openSet.Add(CurrentStartNode);
         Grid.openSet = openSet;
 
         int currentIteration = 0;
-        Node node = CurrentStartNode;
+        AstarNode node = CurrentStartNode;
         while (openSet.Count > 0 && node != CurrentTargetNode &&
               (iterations == -1 || currentIteration < iterations))
         {
@@ -138,7 +138,7 @@ public class Pathfinding : MonoBehaviour
             if (node != CurrentTargetNode)
             {
                 // Open neighbours
-                foreach (Node neighbour in Grid.GetNeighbours(node, EightConnectivity))
+                foreach (AstarNode neighbour in Grid.GetNeighbours(node, EightConnectivity))
                 {
                     /****/
                     //TODO
@@ -187,10 +187,10 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    void RetracePath(Node startNode, Node endNode)
+    void RetracePath(AstarNode startNode, AstarNode endNode)
     {
-        List<Node> path = new List<Node>();
-        Node currentNode = endNode;
+        List<AstarNode> path = new List<AstarNode>();
+        AstarNode currentNode = endNode;
 
         /****/
         //TODO
@@ -210,7 +210,7 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    float GetDistance(Node nodeA, Node nodeB)
+    float GetDistance(AstarNode nodeA, AstarNode nodeB)
     {
         // Distance function
         //nodeA.mGridX   nodeB.mGridX
@@ -243,7 +243,7 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    float Heuristic(Node nodeA, Node nodeB)
+    float Heuristic(AstarNode nodeA, AstarNode nodeB)
     {
         // Heuristic function
         //nodeA.mGridX   nodeB.mGridX
@@ -262,15 +262,15 @@ public class Pathfinding : MonoBehaviour
 
     /***************************************************************************/
 
-    List<Node> SmoothPath(List<Node> path)
+    List<AstarNode> SmoothPath(List<AstarNode> path)
     {
-        List<Node> smoothPath = new List<Node>();
+        List<AstarNode> smoothPath = new List<AstarNode>();
 
         //Add the last node, the target one
         smoothPath.Add(path[path.Count-1]);
 
         //Set the first node to compare, the destiny
-        Node currentNode = smoothPath[0];
+        AstarNode currentNode = smoothPath[0];
         
         int max = path.Count;
         bool aux = false;
@@ -316,8 +316,8 @@ public class Pathfinding : MonoBehaviour
     {
         //TODO: 4 Connectivity
         //TODO: Cost
-        Node destNode = Grid.GetNode(x2, y2);
-        Node startNode = Grid.GetNode(x, y);
+        AstarNode destNode = Grid.GetNode(x2, y2);
+        AstarNode startNode = Grid.GetNode(x, y);
         //
         float gCostDif = startNode.gCost - destNode.gCost;
         // Difference between x and y, to know how much we need to move
@@ -366,7 +366,7 @@ public class Pathfinding : MonoBehaviour
         // Obetenmos numerator del valor de longest con sus bits desplazados una posición a la derecha
         // ex: 23 -> 11
         int numerator = longest >> 1;
-        Node cNode;
+        AstarNode cNode;
         float distance = 0.0f;
 
         // Ahora recorremos el camino entre los dos nodos 
