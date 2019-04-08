@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class Node {
+public class AstarNode {
 	
 	public bool     mWalkable;
 	public Vector3  mWorldPosition;
@@ -12,11 +12,11 @@ public class Node {
 
 	public float    gCost;
 	public float    hCost;
-	public Node     mParent;
+	public AstarNode     mParent;
 	
   /***************************************************************************/
 
-	public Node(bool walkable, Vector3 worldPosition, int gridX, int gridY, float costMultiplier )
+	public AstarNode(bool walkable, Vector3 worldPosition, int gridX, int gridY, float costMultiplier )
     {
         mWalkable = walkable;
         mWorldPosition = worldPosition;

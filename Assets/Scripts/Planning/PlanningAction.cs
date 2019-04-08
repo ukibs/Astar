@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Action
+public class PlanningAction
 {
   public ActionType         mActionType;
 	public World.WorldStateMask   mPreconditions;
@@ -40,7 +40,7 @@ public class Action
 	
   /***************************************************************************/
 
-	public Action( ActionType actionType, Ingredients ingredient, World.WorldStateMask preconditions, World.WorldStateMask effects, 
+	public PlanningAction( ActionType actionType, Ingredients ingredient, World.WorldStateMask preconditions, World.WorldStateMask effects, 
         World.WorldStateMask negativeEffects, float cost, string name )
   {
     mActionType     = actionType;
