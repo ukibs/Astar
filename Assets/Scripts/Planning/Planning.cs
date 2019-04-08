@@ -10,24 +10,36 @@ public class Planning : MonoBehaviour
 
     public WorldState finBackward;
     public WorldState fin;
-    World mWorld;
+
+    private World mWorld;
+    private CookBehaviourTree behaviourTree;
+
+    public List<NodePlanning> Plan { get { return mWorld.plan; } }
 
     /***************************************************************************/
 
     void Start()
     {
         mWorld = GetComponent<World>();
-        for(int i = 0; i < finBackward.finalRecipe[0].ingredients.Length; i++)
+        behaviourTree = GetComponent<CookBehaviourTree>();
+        // Para que no se raye si esta vacio
+        if(finBackward.finalRecipe != null)
         {
-            finBackward.ingredientsKept.Add(finBackward.finalRecipe[0].ingredients[i]);
-            finBackward.ingredientsVisited.Add(finBackward.finalRecipe[0].ingredients[i]);
-        }
+            for (int i = 0; i < finBackward.finalRecipe[0].ingredients.Length; i++)
+            {
+                finBackward.ingredientsKept.Add(finBackward.finalRecipe[0].ingredients[i]);
+                finBackward.ingredientsVisited.Add(finBackward.finalRecipe[0].ingredients[i]);
+            }
+        }        
 
         Debug.Log("Planning...");
         FindPlan(new WorldState(), fin);
-        mWorld.plan = null;
-        Debug.Log("Planning backwards...");
-        FindPlanBackward(finBackward, new WorldState());
+
+        //behaviourTree.ReceivePlan(mWorld.plan);
+        //mWorld.plan = null;
+
+        //Debug.Log("Planning backwards...");
+        //FindPlanBackward(finBackward, new WorldState());
     }
 
     /***************************************************************************/
