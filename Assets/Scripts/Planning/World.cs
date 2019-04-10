@@ -291,6 +291,18 @@ public class World : MonoBehaviour
         return Vector3.one;
     }
 
+    public GameObject GetIngredientOfType(Ingredients type)
+    {
+        for (int i = 0; i < ingredients.Count; i++)
+        {
+            if (ingredients[i].type == type)
+            {
+                return ingredients[i].gameObject;
+            }
+        }
+        return null;
+    }
+
     /***************************************************************************/
 
     public static int PopulationCount(int n)

@@ -12,7 +12,7 @@ public class Planning : MonoBehaviour
     public WorldState fin;
 
     private World mWorld;
-    private CookBehaviourTree behaviourTree;
+    //private CookBehaviourTree behaviourTree;
 
     public List<NodePlanning> Plan { get { return mWorld.plan; } }
 
@@ -20,10 +20,11 @@ public class Planning : MonoBehaviour
 
     void Start()
     {
-        mWorld = GetComponent<World>();
-        behaviourTree = GetComponent<CookBehaviourTree>();
+        //mWorld = GetComponent<World>();
+        mWorld = FindObjectOfType<World>();
+        //behaviourTree = GetComponent<CookBehaviourTree>();
         // Para que no se raye si esta vacio
-        if(finBackward.finalRecipe != null)
+        if (finBackward.finalRecipe != null)
         {
             for (int i = 0; i < finBackward.finalRecipe[0].ingredients.Length; i++)
             {

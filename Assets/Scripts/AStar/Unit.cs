@@ -2,19 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum MovingState
+{
+    Stopped,
+    Moving,
+    InDestiny
+}
+
 public class Unit : MonoBehaviour
 {
   public float      Speed = 10.0f;
   public GameObject Astar;
 
 
-  List<AstarNode> mPath;
+  public List<AstarNode> mPath;
+
+    public MovingState movingState = MovingState.Stopped;
 
 	int targetIndex;
 
-  /***************************************************************************/
+    public List<Ingredients> gatheredIngredients;
 
-	void Start() {
+    #region Properties
+
+    //public bool HasPath { get {  return { mPath != null; } } }
+
+    #endregion
+
+    /***************************************************************************/
+
+    void Start() {
 	}
 
   /***************************************************************************/
@@ -35,6 +52,7 @@ public class Unit : MonoBehaviour
 
         // If a path was found follow it
         if( mPath != null){
+                    movingState = MovingState.Moving;
           targetIndex = 0;
 			    StopCoroutine("FollowPath");
 			    StartCoroutine("FollowPath");
@@ -51,6 +69,7 @@ public class Unit : MonoBehaviour
 			if (transform.position == currentWaypoint) {
 				targetIndex ++;
 				if (targetIndex >= mPath.Count ){
+                    movingState = MovingState.InDestiny;
 					yield break;
 				}
 				currentWaypoint = mPath[targetIndex].mWorldPosition;
@@ -81,5 +100,20 @@ public class Unit : MonoBehaviour
 	}
 
   /***************************************************************************/
+
+    public void GetPath(Vector3 destination)
+    {
+        // Find path
+        mPath = Astar.GetComponent<Pathfinding>().FindPath(transform.position, destination, -1);
+
+        // If a path was found follow it
+        if (mPath != null)
+        {
+            movingState = MovingState.Moving;
+            targetIndex = 0;
+            StopCoroutine("FollowPath");
+            StartCoroutine("FollowPath");
+        }
+    }
 
 }

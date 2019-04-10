@@ -27,6 +27,12 @@ public class Pathfinding : MonoBehaviour
     bool EightConnectivity = true;
     public Heuristics heuristic = Heuristics.Euclidean;
 
+    #region Properties
+
+    //public bool TransformHasTarget { get { return mTarget != null; } } 
+
+    #endregion
+
     /***************************************************************************/
 
     void Awake()
@@ -48,42 +54,42 @@ public class Pathfinding : MonoBehaviour
     void Update()
     {
         // Positions changed?
-        if (PathInvalid())
-        {
-            // Remove old path
-            if (Grid.path != null)
-            {
-                Grid.path.Clear();
-            }
-            // Start calculating path again
-            Iterations = 0;
-            if (TimeBetweenSteps == 0.0f)
-            {
-                Iterations = -1;
-            }
-            FindPath(mSeeker.position, mTarget.position, Iterations);
-        }
-        else
-        {
-            // Path found?
-            if (Iterations >= 0)
-            {
-                // One or more iterations?
-                if (TimeBetweenSteps == 0.0f)
-                {
-                    // One iteration, look until path is found
-                    Iterations = -1;
-                    FindPath(mSeeker.position, mTarget.position, Iterations);
-                }
-                else if (Time.time > LastStepTime + TimeBetweenSteps)
-                {
-                    // Iterate increasing depth every time step
-                    LastStepTime = Time.time;
-                    Iterations++;
-                    FindPath(mSeeker.position, mTarget.position, Iterations);
-                }
-            }
-        }
+        //if (PathInvalid())
+        //{
+        //    // Remove old path
+        //    if (Grid.path != null)
+        //    {
+        //        Grid.path.Clear();
+        //    }
+        //    // Start calculating path again
+        //    Iterations = 0;
+        //    if (TimeBetweenSteps == 0.0f)
+        //    {
+        //        Iterations = -1;
+        //    }
+        //    FindPath(mSeeker.position, mTarget.position, Iterations);
+        //}
+        //else
+        //{
+        //    // Path found?
+        //    if (Iterations >= 0)
+        //    {
+        //        // One or more iterations?
+        //        if (TimeBetweenSteps == 0.0f)
+        //        {
+        //            // One iteration, look until path is found
+        //            Iterations = -1;
+        //            FindPath(mSeeker.position, mTarget.position, Iterations);
+        //        }
+        //        else if (Time.time > LastStepTime + TimeBetweenSteps)
+        //        {
+        //            // Iterate increasing depth every time step
+        //            LastStepTime = Time.time;
+        //            Iterations++;
+        //            FindPath(mSeeker.position, mTarget.position, Iterations);
+        //        }
+        //    }
+        //}
     }
 
     /***************************************************************************/
