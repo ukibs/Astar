@@ -10,7 +10,6 @@ public class Planning : MonoBehaviour
 
     //public WorldState finBackward;
     public WorldState fin;
-    public GameObject kitchen;
 
     private World mWorld;
 
@@ -52,7 +51,7 @@ public class Planning : MonoBehaviour
 
     public List<NodePlanning> FindPlan(WorldState startWorldState, WorldState targetWorldState)
     {
-        targetWorldState.cPos = kitchen.transform.position;
+        targetWorldState.cPos = mWorld.kitchen.transform.position;
         CurrentStartNode = new NodePlanning(startWorldState, null);
         CurrentTargetNode = new NodePlanning(targetWorldState, null);
 

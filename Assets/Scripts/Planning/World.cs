@@ -284,7 +284,9 @@ public class World : MonoBehaviour
 
     public Vector3 FindIngredientOfType(Ingredients type)
     {
-        for(int i = 0; i < ingredients.Count; i++)
+        ingredients = FindObjectsOfType<Ingredient>().ToList();
+
+        for (int i = 0; i < ingredients.Count; i++)
         {
             if(ingredients[i].type == type)
             {
@@ -296,6 +298,8 @@ public class World : MonoBehaviour
 
     public GameObject GetIngredientOfType(Ingredients type)
     {
+        ingredients = FindObjectsOfType<Ingredient>().ToList();
+
         for (int i = 0; i < ingredients.Count; i++)
         {
             if (ingredients[i].type == type)
