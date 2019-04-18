@@ -37,7 +37,7 @@ public class Pathfinding : MonoBehaviour
 
     void Awake()
     {
-        Grid = GetComponent<Grid>();
+        Grid = FindObjectOfType<Grid>();
 
         Iterations = 0;
         LastStepTime = 0.0f;

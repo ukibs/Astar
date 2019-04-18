@@ -19,37 +19,43 @@ public class CookBehaviourTree : MonoBehaviour
     private Unit cookerPathSeeker;
     private Pathfinding pathfinding;
     private World world;
+    private WorldState initialWorldState;
 
     // Start is called before the first frame update
     void Start()
     {
         // Recogida de componenetes
-        //if (cooker != null)
-        //    cookerPathSeeker = cooker.GetComponent<Unit>();
         cookerPathSeeker = GetComponent<Unit>();
         pathfinding = GetComponent<Pathfinding>();
         world = FindObjectOfType<World>();
 
         //
         plannifier = GetComponent<Planning>();
-        //plan = plannifier.Plan;
+        plan = new List<NodePlanning>();
+        initialWorldState = new WorldState();
         Debug.Log("Getting plan");
         //Debug.Log(plan);
-        //
-        //behaviorTree = new Root(
-        //    new Action(() => Debug.Log("Hello World!"))
-        //);
+        
         //
         behaviorTree = new Root(
             new Sequence(
                 new Action((bool planning) =>
                 {
-                    // Hacer que genere uno diferente para cada uno
-                    plan = plannifier.Plan;
-                    return Action.Result.SUCCESS;
+                    initialWorldState.cPos = transform.position;
+                    plan = plannifier.FindPlan(initialWorldState, plannifier.fin);
+                    mCurrentAction = -1;
+
+                    if (plan.Count > 0)
+                    {
+                        return Action.Result.SUCCESS;
+                    }
+                    else
+                    {
+                        return Action.Result.FAILED;
+                    }
                 })
                 { Label = "Planning" },
-                new Repeater(plan.Count,
+                new Repeater(-1,
                     new Sequence(
                         new Action((bool nextActionAvailable) =>
                         {
@@ -161,11 +167,11 @@ public class CookBehaviourTree : MonoBehaviour
 
                                 return Action.Result.FAILED;
 
-                            })
-                        )
-                    )
-                )
-            )
+                            })// Fin Action
+                        )// Fin Selector
+                    )// Fin Sequence
+                )// Fin Repeater
+            )// Fin Sequence
         );
         
         // attach the debugger component if executed in editor (helps to debug in the inspector) 

@@ -8,11 +8,11 @@ public class Planning : MonoBehaviour
     NodePlanning CurrentStartNode;
     NodePlanning CurrentTargetNode;
 
-    public WorldState finBackward;
+    //public WorldState finBackward;
     public WorldState fin;
+    public GameObject kitchen;
 
     private World mWorld;
-    //private CookBehaviourTree behaviourTree;
 
     public List<NodePlanning> Plan { get { return mWorld.plan; } }
 
@@ -20,21 +20,20 @@ public class Planning : MonoBehaviour
 
     void Start()
     {
-        //mWorld = GetComponent<World>();
         mWorld = FindObjectOfType<World>();
-        //behaviourTree = GetComponent<CookBehaviourTree>();
-        // Para que no se raye si esta vacio
-        if (finBackward.finalRecipe != null)
+        mWorld.plan = null;
+
+        /*if (finBackward.finalRecipe != null)
         {
             for (int i = 0; i < finBackward.finalRecipe[0].ingredients.Length; i++)
             {
                 finBackward.ingredientsKept.Add(finBackward.finalRecipe[0].ingredients[i]);
                 finBackward.ingredientsVisited.Add(finBackward.finalRecipe[0].ingredients[i]);
             }
-        }        
+        }  */
 
-        Debug.Log("Planning...");
-        FindPlan(new WorldState(), fin);
+        //Debug.Log("Planning...");
+        //FindPlan(new WorldState(), fin);
 
         //behaviourTree.ReceivePlan(mWorld.plan);
         //mWorld.plan = null;
@@ -53,6 +52,7 @@ public class Planning : MonoBehaviour
 
     public List<NodePlanning> FindPlan(WorldState startWorldState, WorldState targetWorldState)
     {
+        targetWorldState.cPos = kitchen.transform.position;
         CurrentStartNode = new NodePlanning(startWorldState, null);
         CurrentTargetNode = new NodePlanning(targetWorldState, null);
 
@@ -138,10 +138,10 @@ public class Planning : MonoBehaviour
         if (mWorld.plan != null)
             Debug.Log("PLAN FOUND!");
         else Debug.Log("Not plan found");
-        for (int i = 0; i < mWorld.plan.Count; ++i)
+       /* for (int i = 0; i < mWorld.plan.Count; ++i)
         {
             Debug.LogFormat("{0} Accumulated cost: {1}", mWorld.plan[i].mAction.mName, mWorld.plan[i].gCost);
-        }
+        }*/
 
         return mWorld.plan;
     }

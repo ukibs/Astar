@@ -12,6 +12,7 @@ public class World : MonoBehaviour
     public List<NodePlanning> plan;
 
     List<Ingredient> ingredients = new List<Ingredient>();
+    public GameObject kitchen;
 
     WorldState mWorldState;
 
@@ -113,6 +114,8 @@ public class World : MonoBehaviour
                 mWorldState.ingredientsKept.Add(action.mIngredient);
                 break;
             case PlanningAction.ActionType.AT_GO_TO_KITCHEN:
+                nodePlanning.mAction.mCost = (kitchen.transform.position - mWorldState.cPos).magnitude;
+                mWorldState.cPos = kitchen.transform.position;
                 mWorldState.finalRecipe.Add(RecipeCompleted(mWorldState));
                 break;
             default:
