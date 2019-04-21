@@ -181,10 +181,10 @@ public class Pathfinding : MonoBehaviour
                 // Path found
                 Iterations = -1;
 
-                Debug.Log("Statistics:");
-                Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
-                Debug.LogFormat("Open nodes:   {0}", openSet.Count);
-                Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
+                //Debug.Log("Statistics:");
+                //Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
+                //Debug.LogFormat("Open nodes:   {0}", openSet.Count);
+                //Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
             }
         }
 

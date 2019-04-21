@@ -51,6 +51,7 @@ public class Planning : MonoBehaviour
 
     public List<NodePlanning> FindPlan(WorldState startWorldState, WorldState targetWorldState)
     {
+        mWorld.plan = new List<NodePlanning>();
         targetWorldState.cPos = mWorld.kitchen.transform.position;
         CurrentStartNode = new NodePlanning(startWorldState, null);
         CurrentTargetNode = new NodePlanning(targetWorldState, null);
@@ -126,21 +127,21 @@ public class Planning : MonoBehaviour
 
                 RetracePlan(CurrentStartNode, CurrentTargetNode);
 
-                Debug.Log("Statistics:");
-                Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
-                Debug.LogFormat("Open nodes:   {0}", openSet.Count);
-                Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
+                //Debug.Log("Statistics:");
+                //Debug.LogFormat("Total nodes:  {0}", openSet.Count + closedSet.Count);
+                //Debug.LogFormat("Open nodes:   {0}", openSet.Count);
+                //Debug.LogFormat("Closed nodes: {0}", closedSet.Count);
             }
         }
 
         // Log plan
-        if (mWorld.plan != null)
+        if (mWorld.plan != null && mWorld.plan.Count > 0)
             Debug.Log("PLAN FOUND!");
         else Debug.Log("Not plan found");
-       /* for (int i = 0; i < mWorld.plan.Count; ++i)
+        for (int i = 0; i < mWorld.plan.Count; ++i)
         {
             Debug.LogFormat("{0} Accumulated cost: {1}", mWorld.plan[i].mAction.mName, mWorld.plan[i].gCost);
-        }*/
+        }
 
         return mWorld.plan;
     }

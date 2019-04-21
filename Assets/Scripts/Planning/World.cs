@@ -82,6 +82,7 @@ public class World : MonoBehaviour
     #region Forward
     public List<NodePlanning> GetNeighbours(NodePlanning node)
     {
+        ingredients = FindObjectsOfType<Ingredient>().ToList();
         List<NodePlanning> neighbours = new List<NodePlanning>();
 
         foreach (PlanningAction action in mActionList)
@@ -131,7 +132,7 @@ public class World : MonoBehaviour
         switch (action.mActionType)
         {
             case PlanningAction.ActionType.AT_GO_TO:
-                meets = ValidIngredient(mWorldState, action.mIngredient);
+                meets = ValidIngredient(mWorldState, action.mIngredient) && GetIngredientOfType(action.mIngredient) != null;
                 break;
             case PlanningAction.ActionType.AT_PICK_UP:
                 ingredientPos = FindIngredientOfType(action.mIngredient);
@@ -284,8 +285,6 @@ public class World : MonoBehaviour
 
     public Vector3 FindIngredientOfType(Ingredients type)
     {
-        ingredients = FindObjectsOfType<Ingredient>().ToList();
-
         for (int i = 0; i < ingredients.Count; i++)
         {
             if(ingredients[i].type == type)
@@ -299,7 +298,6 @@ public class World : MonoBehaviour
     public GameObject GetIngredientOfType(Ingredients type)
     {
         ingredients = FindObjectsOfType<Ingredient>().ToList();
-
         for (int i = 0; i < ingredients.Count; i++)
         {
             if (ingredients[i].type == type)
