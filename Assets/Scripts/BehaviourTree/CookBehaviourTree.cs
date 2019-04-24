@@ -121,6 +121,7 @@ public class CookBehaviourTree : MonoBehaviour
                                         Debug.Log(plan[mCurrentAction].mAction.mIngredient + " recogido");
                                             cookerPathSeeker.gatheredIngredients.Add(plan[mCurrentAction].mAction.mIngredient);
                                             Destroy(ingredientToGet);
+                                            initialWorldState.ingredientsKept.Add(plan[mCurrentAction].mAction.mIngredient);
                                             return Action.Result.SUCCESS;
                                         }
                                     //
@@ -157,6 +158,7 @@ public class CookBehaviourTree : MonoBehaviour
                                     //
                                     Debug.Log("He llegado a la cocina");
                                         cookerPathSeeker.movingState = MovingState.Stopped;
+                                        initialWorldState.ingredientsKept.Clear();
                                         return Action.Result.SUCCESS;
                                     }
                                     else /*if(cookerPathSeeker.movingState == MovingState.Moving)*/
