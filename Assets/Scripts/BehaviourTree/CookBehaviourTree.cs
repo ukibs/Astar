@@ -89,7 +89,7 @@ public class CookBehaviourTree : MonoBehaviour
                                     //
                                     //cooker.transform.position = plan[mCurrentAction].mWorldState.cPos;
                                     //
-                                    Debug.Log("He llegado a " + plan[mCurrentAction].mAction.mIngredient);
+                                    //Debug.Log("He llegado a " + plan[mCurrentAction].mAction.mIngredient);
                                         cookerPathSeeker.movingState = MovingState.Stopped;
                                         return Action.Result.SUCCESS;
                                     }

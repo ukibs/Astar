@@ -140,7 +140,7 @@ public class Planning : MonoBehaviour
         else Debug.Log("Not plan found");
         for (int i = 0; i < mWorld.plan.Count; ++i)
         {
-            Debug.LogFormat("{0} Accumulated cost: {1}", mWorld.plan[i].mAction.mName, mWorld.plan[i].gCost);
+            //Debug.LogFormat("{0} Accumulated cost: {1}", mWorld.plan[i].mAction.mName, mWorld.plan[i].gCost);
         }
 
         return mWorld.plan;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine.UI;
 
 public enum Ingredients
 {
@@ -20,5 +21,13 @@ public enum Ingredients
 public class Ingredient : MonoBehaviour
 {
     public Ingredients type;
+}
+
+[CreateAssetMenu(menuName = "Ingredient")]
+public class IngredientScript : ScriptableObject
+{
+    public string name;
+    public Sprite sprite;
+    public GameObject prefab;
 }
 
