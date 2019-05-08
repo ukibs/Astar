@@ -7,6 +7,7 @@ public class CoinSpawner : MonoBehaviour
     //
     public float timeBetweenSpawns = 2;
     public GameObject coinPrefab;
+    public int maxActiveCoins = 20;
     //
     //private Ingredient[] presenetIngredients;
     private float timeFromLastSpawn;
@@ -38,11 +39,19 @@ public class CoinSpawner : MonoBehaviour
     void SpawnCoin()
     {
         //
-        
-        float xToUse = UnityEngine.Random.Range(-10, 10);
-        float zToUse = UnityEngine.Random.Range(-10, 10);
-        Instantiate(coinPrefab, new Vector3(xToUse, 1, zToUse), Quaternion.identity);
-        Debug.Log("Spawning coin ");
+        Coin[] activeCoins = FindObjectsOfType<Coin>();
+        if(activeCoins.Length < maxActiveCoins)
+        {
+            //
+            float xToUse = UnityEngine.Random.Range(-10, 10);
+            float zToUse = UnityEngine.Random.Range(-10, 10);
+            Instantiate(coinPrefab, new Vector3(xToUse, 1, zToUse), Quaternion.identity);
+            Debug.Log("Spawning coin ");
+        }
+        else
+        {
+            Debug.Log("Max coins reached");
+        }
 
     }
     
