@@ -63,6 +63,8 @@ public class HUD : MonoBehaviour
     {
         Debug.Log("He pinchado en " + index);
         currentPrefabToSet = index;
+        currentMoney -= ingredients[index].cost;
+        textMoney.text = currentMoney + "";
     }
 
     private void CheckMouse()
