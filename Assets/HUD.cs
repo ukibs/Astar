@@ -61,7 +61,6 @@ public class HUD : MonoBehaviour
 
     public void createPrefab(int index)
     {
-        Debug.Log("He pinchado en " + index);
         currentPrefabToSet = index;
         currentMoney -= ingredients[index].cost;
         textMoney.text = currentMoney + "";
@@ -105,6 +104,7 @@ public class HUD : MonoBehaviour
         {
             indexRecipeDoing = index;
             textRecipe.text = recipes[index].name;
+            currentMoney -= recipes[index].cost;
         }
     }
 
@@ -136,10 +136,13 @@ public class HUD : MonoBehaviour
 
     public void RecipeDone()
     {
-        recipesDone++;
-        textRecipe.text = recipesDone + "";
-        currentMoney += recipes[indexRecipeDoing].profit;
-        indexRecipeDoing = -1;
-        textRecipe.text = "";
+        if (indexRecipeDoing != -1)
+        {
+            recipesDone++;
+            textNumberRecipesDone.text = recipesDone + "";
+            currentMoney += recipes[indexRecipeDoing].profit;
+            indexRecipeDoing = -1;
+            textRecipe.text = "";
+        }
     }
 }
