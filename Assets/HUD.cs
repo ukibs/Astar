@@ -134,9 +134,9 @@ public class HUD : MonoBehaviour
         }
     }
 
-    public void RecipeDone()
+    public void RecipeDone(Recipe recipe)
     {
-        if (indexRecipeDoing != -1)
+        if (indexRecipeDoing != -1 && recipe.name == recipes[indexRecipeDoing].name)
         {
             recipesDone++;
             textNumberRecipesDone.text = recipesDone + "";

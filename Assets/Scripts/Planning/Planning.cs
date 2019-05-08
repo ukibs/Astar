@@ -124,6 +124,7 @@ public class Planning : MonoBehaviour
                 CurrentTargetNode.mAction = node.mAction;
                 CurrentTargetNode.gCost = node.gCost;
                 CurrentTargetNode.hCost = node.hCost;
+                CurrentTargetNode.mWorldState = node.mWorldState;
 
                 RetracePlan(CurrentStartNode, CurrentTargetNode);
 

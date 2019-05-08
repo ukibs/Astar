@@ -23,7 +23,7 @@ public class CoinSpawner : MonoBehaviour
     void Update()
     {
         //
-        Debug.Log("Spawner en marcha");
+        //Debug.Log("Spawner en marcha");
         //
         float dt = Time.deltaTime;
         //
@@ -51,18 +51,18 @@ public class CoinSpawner : MonoBehaviour
                 if(hitInfo.transform.gameObject.layer != LayerMask.NameToLayer("Unwalkable"))
                 {
                     Instantiate(coinPrefab, new Vector3(xToUse, 1, zToUse), coinPrefab.transform.rotation);
-                    Debug.Log("Spawning coin ");
+                    //Debug.Log("Spawning coin ");
                 }
                 else
                 {
-                    Debug.Log("Pega en duro ");
+                    //Debug.Log("Pega en duro ");
                 }
             }
             
         }
         else
         {
-            Debug.Log("Max coins reached");
+            //Debug.Log("Max coins reached");
         }
 
     }

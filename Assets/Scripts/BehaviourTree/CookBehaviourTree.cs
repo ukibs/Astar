@@ -37,7 +37,7 @@ public class CookBehaviourTree : MonoBehaviour
         plan = new List<NodePlanning>();
         initialWorldState = new WorldState();
         hud = FindObjectOfType<HUD>();
-        Debug.Log("Getting plan");
+        //Debug.Log("Getting plan");
         //Debug.Log(plan);
         
         //
@@ -157,16 +157,12 @@ public class CookBehaviourTree : MonoBehaviour
                                 // TODO: Hacer un buen cálculo de la distancia
                                 else if (cookerPathSeeker.movingState == MovingState.InDestiny)
                                     {
-                                    //
-                                    //cooker.transform.position = plan[mCurrentAction].mWorldState.cPos;
-                                    //
-                                    //Debug.Log("He llegado a la cocina");
                                         cookerPathSeeker.movingState = MovingState.Stopped;
                                         initialWorldState.ingredientsKept.Clear();
                                         //
                                         if (isPlayer)
                                         {
-                                            hud.RecipeDone();
+                                            hud.RecipeDone(plan[mCurrentAction].mWorldState.finalRecipe[0]);
                                         }
                                         //
                                         return Action.Result.SUCCESS;
