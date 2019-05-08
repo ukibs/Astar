@@ -83,12 +83,16 @@ public class HUD : MonoBehaviour
         // Hit?
         if (Physics.Raycast(ray, out hit, 1000.0f)) {
             //
-            posInWorld = hit.point;
-            posInWorld.y = 1;
-            //
-            GameObject newIngredient = Instantiate(ingredients[currentPrefabToSet].prefab, posInWorld, Quaternion.identity);
-            // Luego quiatermos dinero con el coste
-            currentPrefabToSet = -1;
+            if(hit.transform.gameObject.layer != LayerMask.NameToLayer("Unwalkable"))
+            {
+                posInWorld = hit.point;
+                posInWorld.y = 1;
+                //
+                GameObject newIngredient = Instantiate(ingredients[currentPrefabToSet].prefab, posInWorld, Quaternion.identity);
+                // Luego quiatermos dinero con el coste
+                currentPrefabToSet = -1;
+            }
+            
         }
         
     }
