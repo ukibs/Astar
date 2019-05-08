@@ -50,11 +50,11 @@ public class IngredientSpawner : MonoBehaviour
             float xToUse = UnityEngine.Random.RandomRange(-10, 10);
             float zToUse = UnityEngine.Random.RandomRange(-10, 10);
             Instantiate(ingredientPrefabs[indexToSpawn], new Vector3(xToUse, 1, zToUse), Quaternion.identity);
-            Debug.Log("Spawning " + ingredientPrefabs[indexToSpawn]);
+            //Debug.Log("Spawning " + ingredientPrefabs[indexToSpawn]);
         }
         else
         {
-            Debug.Log(ingredientPrefabs[indexToSpawn] + " already present");
+            //Debug.Log(ingredientPrefabs[indexToSpawn] + " already present");
         }
             
     }
