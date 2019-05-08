@@ -13,6 +13,8 @@ public class HUD : MonoBehaviour
     private Recipe[] recipes;
     private int indexIngredient = 0;
     private int indexRecipes = 0;
+    // Dinero del cocinero
+    private int currentMoney;       
 
     // Start is called before the first frame update
     void Start()
@@ -50,5 +52,11 @@ public class HUD : MonoBehaviour
     public void newRecipe(int index)
     {
         currentRecipe.text = recipes[index].name;
+    }
+
+    public void AddCoin()
+    {
+        currentMoney++;
+        Debug.Log("Current money: " + currentMoney);
     }
 }
