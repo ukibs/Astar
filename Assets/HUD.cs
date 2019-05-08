@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
 
     public Text textRecipe;
     public Text textMoney;
+    public Text textNumberRecipesDone;
 
     private IngredientScript [] ingredients;
     private Recipe[] recipes;
@@ -20,6 +21,7 @@ public class HUD : MonoBehaviour
     private int indexRecipes = 0;
     // Dinero del cocinero
     private int currentMoney;
+    private int recipesDone = 0;
     //
     private int currentPrefabToSet = -1;
 
@@ -104,11 +106,26 @@ public class HUD : MonoBehaviour
     public void ChangeIngredientIndex(int value)
     {
         int newIndex = indexIngredient + value;
-        if(newIndex >= 0 || newIndex < ingredients.Length - 4)
+        if(newIndex >= 0 && newIndex < ingredients.Length - 2)
         {
             indexIngredient = newIndex;
             asignIngredients();
         }
-        Debug.Log(indexIngredient);
+    }
+
+    public void ChangeRecipeIndex(int value)
+    {
+        int newIndex = indexRecipes + value;
+        if (newIndex >= 0 && newIndex < recipes.Length - 2)
+        {
+            indexRecipes = newIndex;
+            asignRecipes();
+        }
+    }
+
+    public void RecipeDone()
+    {
+        recipesDone++;
+        textRecipe.text = recipesDone + "";
     }
 }
