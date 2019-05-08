@@ -9,7 +9,7 @@ public class HUD : MonoBehaviour
     public Button [] recipesButtons;
 
     public Text currentRecipe;
-    public GameObject[] ingredientsPrefabs;
+    //public GameObject[] ingredientsPrefabs;
 
     public Text textRecipe;
     public Text textMoney;
@@ -35,7 +35,7 @@ public class HUD : MonoBehaviour
 
     void Update()
     {
-        
+        CheckMouse();
     }
 
     private void asignRecipes()
@@ -73,10 +73,21 @@ public class HUD : MonoBehaviour
     private void PlacePrefab(Vector3 mousePosition)
     {
         Vector3 posInWorld = Camera.main.ViewportToWorldPoint(mousePosition);
-        posInWorld.y = 1;
-        GameObject newIngredient = Instantiate(ingredientsPrefabs[currentPrefabToSet], posInWorld, Quaternion.identity);
-        // Luego quiatermos dinero con el coste
-        currentPrefabToSet = -1;
+        //Raycast
+         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // Hit?
+        if (Physics.Raycast(ray, out hit, 1000.0f)) {
+            //
+            posInWorld = hit.point;
+            posInWorld.y = 1;
+            //
+            GameObject newIngredient = Instantiate(ingredients[currentPrefabToSet].prefab, posInWorld, Quaternion.identity);
+            // Luego quiatermos dinero con el coste
+            currentPrefabToSet = -1;
+        }
+        
     }
 
     public void newRecipe(int index)

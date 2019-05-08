@@ -39,26 +39,26 @@ public class Unit : MonoBehaviour
   private void Update()
   {
     // Mouse click
-    if( Input.GetMouseButtonDown(0))
-    {
-      // Raycast
-      Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-      RaycastHit hit;
+    //if( Input.GetMouseButtonDown(0))
+    //{
+    //  // Raycast
+    //  Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //  RaycastHit hit;
 
-      // Hit?
-      if (Physics.Raycast( ray, out hit, 1000.0f ) ){
-        // Find path
-        mPath = Astar.GetComponent<Pathfinding>().FindPath( transform.position, hit.point, -1 );
+    //  // Hit?
+    //  if (Physics.Raycast( ray, out hit, 1000.0f ) ){
+    //    // Find path
+    //    mPath = Astar.GetComponent<Pathfinding>().FindPath( transform.position, hit.point, -1 );
 
-        // If a path was found follow it
-        if( mPath != null){
-                    movingState = MovingState.Moving;
-          targetIndex = 0;
-			    StopCoroutine("FollowPath");
-			    StartCoroutine("FollowPath");
-        }
-      }
-    }
+    //    // If a path was found follow it
+    //    if( mPath != null){
+    //                movingState = MovingState.Moving;
+    //      targetIndex = 0;
+			 //   StopCoroutine("FollowPath");
+			 //   StartCoroutine("FollowPath");
+    //    }
+    //  }
+    //}
   }
 
   /***************************************************************************/
