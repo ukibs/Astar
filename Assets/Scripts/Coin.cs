@@ -23,7 +23,7 @@ public class Coin : MonoBehaviour
         if((player.position - transform.position).magnitude < distanceToGetCoin)
         {
             // Efecto de coger monead
-            Debug.Log("Moneda cogida");
+            //Debug.Log("Moneda cogida");
             hud.AddCoin();
             //
             Destroy(gameObject);

@@ -7,8 +7,12 @@ public class HUD : MonoBehaviour
 {
     public Button [] ingredientsButtons;
     public Button [] recipesButtons;
+
     public Text currentRecipe;
     public GameObject[] ingredientsPrefabs;
+
+    public Text textRecipe;
+    public Text textMoney;
 
     private IngredientScript [] ingredients;
     private Recipe[] recipes;
@@ -77,12 +81,23 @@ public class HUD : MonoBehaviour
 
     public void newRecipe(int index)
     {
-        currentRecipe.text = recipes[index].name;
+        textRecipe.text = recipes[index].name;
     }
 
     public void AddCoin()
     {
         currentMoney++;
-        Debug.Log("Current money: " + currentMoney);
+        textMoney.text = currentMoney + "";
+    }
+
+    public void ChangeIngredientIndex(int value)
+    {
+        int newIndex = indexIngredient + value;
+        if(newIndex >= 0 || newIndex < ingredients.Length - 4)
+        {
+            indexIngredient = newIndex;
+            asignIngredients();
+        }
+        Debug.Log(indexIngredient);
     }
 }
