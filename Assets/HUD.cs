@@ -22,6 +22,7 @@ public class HUD : MonoBehaviour
     // Dinero del cocinero
     private int currentMoney;
     private int recipesDone = 0;
+    private int indexRecipeDoing = -1;
     //
     private int currentPrefabToSet = -1;
 
@@ -94,7 +95,11 @@ public class HUD : MonoBehaviour
 
     public void newRecipe(int index)
     {
-        textRecipe.text = recipes[index].name;
+        if (indexRecipeDoing == -1)
+        {
+            indexRecipeDoing = index;
+            textRecipe.text = recipes[index].name;
+        }
     }
 
     public void AddCoin()
@@ -127,5 +132,8 @@ public class HUD : MonoBehaviour
     {
         recipesDone++;
         textRecipe.text = recipesDone + "";
+        currentMoney += recipes[indexRecipeDoing].profit;
+        indexRecipeDoing = -1;
+        textRecipe.text = "";
     }
 }
