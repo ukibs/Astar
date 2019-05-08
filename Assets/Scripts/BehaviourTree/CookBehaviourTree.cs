@@ -7,6 +7,7 @@ public class CookBehaviourTree : MonoBehaviour
 {
     //
     //public GameObject cooker;
+    public bool isPlayer;
 
     //
     private Root behaviorTree;
@@ -20,6 +21,8 @@ public class CookBehaviourTree : MonoBehaviour
     private Pathfinding pathfinding;
     private World world;
     private WorldState initialWorldState;
+    //
+    private HUD hud;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,7 @@ public class CookBehaviourTree : MonoBehaviour
         plannifier = GetComponent<Planning>();
         plan = new List<NodePlanning>();
         initialWorldState = new WorldState();
+        hud = FindObjectOfType<HUD>();
         Debug.Log("Getting plan");
         //Debug.Log(plan);
         
@@ -159,6 +163,12 @@ public class CookBehaviourTree : MonoBehaviour
                                     //Debug.Log("He llegado a la cocina");
                                         cookerPathSeeker.movingState = MovingState.Stopped;
                                         initialWorldState.ingredientsKept.Clear();
+                                        //
+                                        if (isPlayer)
+                                        {
+                                            hud.RecipeDone();
+                                        }
+                                        //
                                         return Action.Result.SUCCESS;
                                     }
                                     else /*if(cookerPathSeeker.movingState == MovingState.Moving)*/
