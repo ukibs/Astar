@@ -23,11 +23,3 @@ public class Ingredient : MonoBehaviour
     public Ingredients type;
 }
 
-[CreateAssetMenu(menuName = "Ingredient")]
-public class IngredientScript : ScriptableObject
-{
-    public string name;
-    public Sprite sprite;
-    public GameObject prefab;
-}
-
