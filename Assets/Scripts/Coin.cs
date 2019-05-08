@@ -6,6 +6,7 @@ public class Coin : MonoBehaviour
 {
     //
     public float distanceToGetCoin = 5;
+    public float rotationSpeed = 30;
     //
     private Transform player;
     private HUD hud;
@@ -20,6 +21,7 @@ public class Coin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //
         if((player.position - transform.position).magnitude < distanceToGetCoin)
         {
             // Efecto de coger monead
@@ -28,5 +30,7 @@ public class Coin : MonoBehaviour
             //
             Destroy(gameObject);
         }
+        //
+        transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
     }
 }

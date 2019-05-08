@@ -45,8 +45,20 @@ public class CoinSpawner : MonoBehaviour
             //
             float xToUse = UnityEngine.Random.Range(-10, 10);
             float zToUse = UnityEngine.Random.Range(-10, 10);
-            Instantiate(coinPrefab, new Vector3(xToUse, 1, zToUse), Quaternion.identity);
-            Debug.Log("Spawning coin ");
+            RaycastHit hitInfo;
+            if(Physics.Raycast(new Vector3(xToUse, 10, zToUse), -Vector3.up, out hitInfo, 15))
+            {
+                if(hitInfo.transform.gameObject.layer != LayerMask.NameToLayer("Unwalkable"))
+                {
+                    Instantiate(coinPrefab, new Vector3(xToUse, 1, zToUse), coinPrefab.transform.rotation);
+                    Debug.Log("Spawning coin ");
+                }
+                else
+                {
+                    Debug.Log("Pega en duro ");
+                }
+            }
+            
         }
         else
         {
