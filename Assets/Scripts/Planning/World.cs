@@ -37,6 +37,8 @@ public class World : MonoBehaviour
         mWorldState.cPos = transform.position;
         mActionList = new List<PlanningAction>();
 
+        recipes = Resources.LoadAll<Recipe>("Scriptable/Recipes").ToList();
+
         ingredients = FindObjectsOfType<Ingredient>().ToList();
 
         for (int i = 0; i < (int)Ingredients.Count; i++)

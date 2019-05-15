@@ -32,6 +32,7 @@ public class HUD : MonoBehaviour
         ingredients = Resources.LoadAll<IngredientScript>("Scriptable/Ingredients");
         recipes = Resources.LoadAll<Recipe>("Scriptable/Recipes");
         indexIngredient = 0;
+        currentMoney = 10;
         asignIngredients();
         asignRecipes();
     }
@@ -45,8 +46,14 @@ public class HUD : MonoBehaviour
     {
         for (int i = 0; i < recipesButtons.Length; i++)
         {
+            recipesButtons[i].enabled = true;
             recipesButtons[i].GetComponent<GUI_recipe>().index = indexIngredient + i;
             recipesButtons[i].GetComponent<GUI_recipe>().SetIngredient = recipes[indexRecipes + i];
+
+            if(recipes[indexRecipes + i].cost > currentMoney)
+            {
+                recipesButtons[i].enabled = false;
+            }
         }
     }
 
@@ -54,8 +61,14 @@ public class HUD : MonoBehaviour
     {
         for (int i = 0; i < ingredientsButtons.Length; i++)
         {
+            ingredientsButtons[i].enabled = true;
             ingredientsButtons[i].GetComponent<GUI_Ingredient>().index = indexIngredient + i;
             ingredientsButtons[i].GetComponent<GUI_Ingredient>().SetIngredient = ingredients[indexIngredient+i];
+
+            if(ingredients[indexIngredient + i].cost > currentMoney)
+            {
+                ingredientsButtons[i].enabled = false;
+            }
         }
     }
 
@@ -64,6 +77,8 @@ public class HUD : MonoBehaviour
         currentPrefabToSet = index;
         currentMoney -= ingredients[index].cost;
         textMoney.text = currentMoney + "";
+        asignIngredients();
+        asignRecipes();
     }
 
     private void CheckMouse()

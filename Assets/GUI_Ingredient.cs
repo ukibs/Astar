@@ -15,7 +15,7 @@ public class GUI_Ingredient : MonoBehaviour
         {
             ingredient = value;
             GetComponent<Image>().sprite = ingredient.sprite;
-            GetComponent<Button>().GetComponentInChildren<Text>().text = ingredient.name;
+            //GetComponent<Button>().GetComponentInChildren<Text>().text = ingredient.name;
         }
     }
 
