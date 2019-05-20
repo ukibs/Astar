@@ -122,7 +122,7 @@ public class HUD : MonoBehaviour
             indexRecipeDoing = index;
             textRecipe.text = recipes[index].name;
             currentMoney -= recipes[index].cost;
-            player.GetComponent<CookBehaviourTree>().plannifier.fin.finalRecipe.Add(recipes[index]);
+            player.GetComponent<CookBehaviourTree>().Plannifier.fin.finalRecipe.Add(recipes[index]);
         }
     }
 
