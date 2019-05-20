@@ -52,7 +52,7 @@ public class HUD : MonoBehaviour
             recipesButtons[i].GetComponent<GUI_recipe>().index = indexIngredient + i;
             recipesButtons[i].GetComponent<GUI_recipe>().SetIngredient = recipes[indexRecipes + i];
 
-            player.GetComponent<CookBehaviourTree>().plannifier.fin.finalRecipe.Add(recipes[indexRecipes + i]);
+            player.GetComponent<CookBehaviourTree>().Plannifier.fin.finalRecipe.Add(recipes[indexRecipes + i]);
 
             if(recipes[indexRecipes + i].cost > currentMoney)
             {

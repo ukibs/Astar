@@ -11,7 +11,7 @@ public class CookBehaviourTree : MonoBehaviour
 
     //
     private Root behaviorTree;
-    public Planning plannifier;
+    private Planning plannifier;
     private List<NodePlanning> plan;
     private int mCurrentAction = -1;
     private float mTimeStartAction = 0;
@@ -24,6 +24,9 @@ public class CookBehaviourTree : MonoBehaviour
     //
     private HUD hud;
     private Animator animator;
+
+    //
+    public Planning Plannifier {  get { return plannifier; } }
 
     // Start is called before the first frame update
     void Start()
