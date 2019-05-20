@@ -23,6 +23,7 @@ public class CookBehaviourTree : MonoBehaviour
     private WorldState initialWorldState;
     //
     private HUD hud;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,7 @@ public class CookBehaviourTree : MonoBehaviour
         hud = FindObjectOfType<HUD>();
         //Debug.Log("Getting plan");
         //Debug.Log(plan);
+        animator = GetComponentInChildren<Animator>();
         
         //
         behaviorTree = new Root(
@@ -89,6 +91,7 @@ public class CookBehaviourTree : MonoBehaviour
                                         //
                                         Vector3 cookerDirection = plan[mCurrentAction].mWorldState.cPos - transform.position;
                                         transform.rotation = Quaternion.LookRotation(cookerDirection);
+                                        animator.SetFloat("Speed", 10);
                                         //
                                         return Action.Result.PROGRESS;
                                     }
@@ -100,6 +103,7 @@ public class CookBehaviourTree : MonoBehaviour
                                     //
                                     //Debug.Log("He llegado a " + plan[mCurrentAction].mAction.mIngredient);
                                         cookerPathSeeker.movingState = MovingState.Stopped;
+                                        animator.SetFloat("Speed", 0);
                                         return Action.Result.SUCCESS;
                                     }
                                     else /*if(cookerPathSeeker.movingState == MovingState.Moving)*/
@@ -160,6 +164,7 @@ public class CookBehaviourTree : MonoBehaviour
                                         //
                                         Vector3 cookerDirection = plan[mCurrentAction].mWorldState.cPos - transform.position;
                                         transform.rotation = Quaternion.LookRotation(cookerDirection);
+                                        animator.SetFloat("Speed", 10);
                                         //
                                         return Action.Result.PROGRESS;
                                     }
@@ -174,6 +179,7 @@ public class CookBehaviourTree : MonoBehaviour
                                             hud.RecipeDone(plan[mCurrentAction].mWorldState.finalRecipe[0]);
                                         }
                                         //
+                                        animator.SetFloat("Speed", 0);
                                         return Action.Result.SUCCESS;
                                     }
                                     else /*if(cookerPathSeeker.movingState == MovingState.Moving)*/
