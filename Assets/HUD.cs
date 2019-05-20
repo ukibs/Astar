@@ -18,7 +18,7 @@ public class HUD : MonoBehaviour
     public GameObject player;
 
     private IngredientScript [] ingredients;
-    private Recipe[] recipes;
+    public Recipe[] recipes;
     private int indexIngredient = 0;
     private int indexRecipes = 0;
     // Dinero del cocinero
@@ -49,7 +49,7 @@ public class HUD : MonoBehaviour
         for (int i = 0; i < recipesButtons.Length; i++)
         {
             recipesButtons[i].enabled = true;
-            recipesButtons[i].GetComponent<GUI_recipe>().index = indexIngredient + i;
+            recipesButtons[i].GetComponent<GUI_recipe>().index = indexRecipes + i;
             recipesButtons[i].GetComponent<GUI_recipe>().SetIngredient = recipes[indexRecipes + i];
 
             if(recipes[indexRecipes + i].cost > currentMoney)
