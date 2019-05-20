@@ -11,7 +11,7 @@ public class CookBehaviourTree : MonoBehaviour
 
     //
     private Root behaviorTree;
-    private Planning plannifier;
+    public Planning plannifier;
     private List<NodePlanning> plan;
     private int mCurrentAction = -1;
     private float mTimeStartAction = 0;
@@ -45,6 +45,11 @@ public class CookBehaviourTree : MonoBehaviour
             new Sequence(
                 new Action((bool planning) =>
                 {
+                    if(isPlayer && plannifier.fin.finalRecipe.Count == 0)
+                    {
+                        return Action.Result.FAILED;
+                    }
+
                     initialWorldState.cPos = transform.position;
                     plan = plannifier.FindPlan(initialWorldState, plannifier.fin);
                     mCurrentAction = -1;
@@ -163,6 +168,7 @@ public class CookBehaviourTree : MonoBehaviour
                                         if (isPlayer)
                                         {
                                             hud.RecipeDone(plan[mCurrentAction].mWorldState.finalRecipe[0]);
+                                            plannifier.fin.finalRecipe.Clear();
                                         }
                                         //
                                         return Action.Result.SUCCESS;
