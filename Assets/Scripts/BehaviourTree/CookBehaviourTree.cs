@@ -84,7 +84,12 @@ public class CookBehaviourTree : MonoBehaviour
                                 //
                                 if (cookerPathSeeker.movingState == MovingState.Stopped)
                                     {
+                                        //
                                         cookerPathSeeker.GetPath(plan[mCurrentAction].mWorldState.cPos);
+                                        //
+                                        Vector3 cookerDirection = plan[mCurrentAction].mWorldState.cPos - transform.position;
+                                        transform.rotation = Quaternion.LookRotation(cookerDirection);
+                                        //
                                         return Action.Result.PROGRESS;
                                     }
                                 // TODO: Hacer un buen cálculo de la distancia
@@ -152,6 +157,10 @@ public class CookBehaviourTree : MonoBehaviour
                                 if (cookerPathSeeker.movingState == MovingState.Stopped)
                                     {
                                         cookerPathSeeker.GetPath(plan[mCurrentAction].mWorldState.cPos);
+                                        //
+                                        Vector3 cookerDirection = plan[mCurrentAction].mWorldState.cPos - transform.position;
+                                        transform.rotation = Quaternion.LookRotation(cookerDirection);
+                                        //
                                         return Action.Result.PROGRESS;
                                     }
                                 // TODO: Hacer un buen cálculo de la distancia
