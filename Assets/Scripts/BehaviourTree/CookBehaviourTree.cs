@@ -24,16 +24,18 @@ public class CookBehaviourTree : MonoBehaviour
     //
     private HUD hud;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         // Recogida de componenetes
         cookerPathSeeker = GetComponent<Unit>();
         pathfinding = GetComponent<Pathfinding>();
         world = FindObjectOfType<World>();
-
-        //
         plannifier = GetComponent<Planning>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {        
+        //
         plan = new List<NodePlanning>();
         initialWorldState = new WorldState();
         hud = FindObjectOfType<HUD>();

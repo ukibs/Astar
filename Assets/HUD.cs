@@ -34,7 +34,7 @@ public class HUD : MonoBehaviour
         ingredients = Resources.LoadAll<IngredientScript>("Scriptable/Ingredients");
         recipes = Resources.LoadAll<Recipe>("Scriptable/Recipes");
         indexIngredient = 0;
-        currentMoney = 10;
+        currentMoney = 100;
         asignIngredients();
         asignRecipes();
     }
@@ -51,8 +51,6 @@ public class HUD : MonoBehaviour
             recipesButtons[i].enabled = true;
             recipesButtons[i].GetComponent<GUI_recipe>().index = indexIngredient + i;
             recipesButtons[i].GetComponent<GUI_recipe>().SetIngredient = recipes[indexRecipes + i];
-
-            player.GetComponent<CookBehaviourTree>().plannifier.fin.finalRecipe.Add(recipes[indexRecipes + i]);
 
             if(recipes[indexRecipes + i].cost > currentMoney)
             {
@@ -124,6 +122,7 @@ public class HUD : MonoBehaviour
             indexRecipeDoing = index;
             textRecipe.text = recipes[index].name;
             currentMoney -= recipes[index].cost;
+            player.GetComponent<CookBehaviourTree>().plannifier.fin.finalRecipe.Add(recipes[index]);
         }
     }
 
