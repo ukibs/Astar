@@ -15,6 +15,8 @@ public class HUD : MonoBehaviour
     public Text textMoney;
     public Text textNumberRecipesDone;
 
+    public GameObject player;
+
     private IngredientScript [] ingredients;
     private Recipe[] recipes;
     private int indexIngredient = 0;
@@ -49,6 +51,8 @@ public class HUD : MonoBehaviour
             recipesButtons[i].enabled = true;
             recipesButtons[i].GetComponent<GUI_recipe>().index = indexIngredient + i;
             recipesButtons[i].GetComponent<GUI_recipe>().SetIngredient = recipes[indexRecipes + i];
+
+            player.GetComponent<CookBehaviourTree>().plannifier.fin.finalRecipe.Add(recipes[indexRecipes + i]);
 
             if(recipes[indexRecipes + i].cost > currentMoney)
             {
